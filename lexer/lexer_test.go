@@ -7,7 +7,14 @@ import (
 )
 
 func TestNextToken(t *testing.T) {
-	input := `=+(){},;`
+	input := `let five = 5;
+let ten = 10;
+
+let add = fn(x: int, y: int) {
+  x + y;
+}
+
+let result = fn(five, ten)`
 
 	tests := []struct {
 		expectedType    token.TokenType

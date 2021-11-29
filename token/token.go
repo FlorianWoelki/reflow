@@ -18,6 +18,7 @@ const (
 	RPAREN    = ")"
 	LBRACE    = "{"
 	RBRACE    = "}"
+	COLON     = ":"
 
 	// Keywords
 	FUNCTION = "FN"
