@@ -20,6 +20,9 @@ const (
 	RBRACE    = "}"
 	COLON     = ":"
 
+	// Data Types
+	INT_TYPE = "INT_TYPE"
+
 	// Keywords
 	FUNCTION = "FN"
 	LET      = "LET"
@@ -30,10 +33,19 @@ var keywords = map[string]TokenType{
 	"let": LET,
 }
 
+var dataTypes = map[string]TokenType{
+	"int": INT_TYPE,
+}
+
 func LookupIdentfier(identifier string) TokenType {
 	if tok, ok := keywords[identifier]; ok {
 		return tok
 	}
+
+	if tok, ok := dataTypes[identifier]; ok {
+		return tok
+	}
+
 	return IDENT
 }
 
