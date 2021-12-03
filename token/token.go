@@ -8,8 +8,14 @@ const (
 	INT   = "INT"   // Simple numbers
 
 	// Operators
-	ASSIGN = "="
-	PLUS   = "+"
+	ASSIGN   = "="
+	PLUS     = "+"
+	MINUS    = "-"
+	BANG     = "!"
+	ASTERISK = "*"
+	SLASH    = "/"
+	LT       = "<"
+	GT       = "<"
 
 	// Delimiters
 	COMMA     = ","
