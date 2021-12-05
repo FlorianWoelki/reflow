@@ -9,5 +9,6 @@ This document describes the current tokens in the language.
 | Illegal | All our illegal characters don't know |
 | EOF | `EOF` |
 | Identifiers | `IDENT`, `INT` |
-| Keywords | `let`, `fn` |
-| Delimiters | `(`, `)`, `{`, `}`, `=`, `,`, `;` |
+| Keywords | `let`, `fn`, `true`, `false`, `if`, `else`, `return` |
+| Delimiters | `(`, `)`, `{`, `}`, `,`, `;`, `:` |
+| Operators | `=`, `+`, `-`, `!`, `*`, `/`, `<`, `>`, `==`, `!=` |
