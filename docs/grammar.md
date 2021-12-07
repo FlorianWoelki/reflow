@@ -1,0 +1,2 @@
+Variables:
+let \<identifier> = \<expression>;
