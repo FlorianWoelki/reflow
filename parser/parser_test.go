@@ -8,6 +8,26 @@ import (
 	"github.com/florianwoelki/reflow/lexer"
 )
 
+func TestBooleanExpression(t *testing.T) {
+	input := "true;"
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program has not enough statements. got=%d", len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
+	}
+
+	testBooleanLiteral(t, stmt.Expression, true)
+}
+
 func TestIdentifierExpression(t *testing.T) {
 	input := "foo;"
 
@@ -337,6 +357,26 @@ func checkParserErrors(t *testing.T, p *Parser) {
 	}
 
 	t.FailNow()
+}
+
+func testBooleanLiteral(t *testing.T, exp ast.Expression, value bool) bool {
+	bo, ok := exp.(*ast.Boolean)
+	if !ok {
+		t.Errorf("exp not *ast.Boolean. got=%T", exp)
+		return false
+	}
+
+	if bo.Value != value {
+		t.Errorf("bo.Value not %t. got=%t", value, bo.Value)
+		return false
+	}
+
+	if bo.TokenLiteral() != fmt.Sprintf("%t", value) {
+		t.Errorf("bo.TokenLiteral not %t. got=%s", value, bo.TokenLiteral())
+		return false
+	}
+
+	return true
 }
 
 func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
