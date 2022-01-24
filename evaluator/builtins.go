@@ -80,7 +80,7 @@ var builtins = map[string]*object.Builtin{
 				return newError("wrong number of arguments. got=%d, expected=2", len(args))
 			}
 			if args[0].Type() != object.ARRAY_OBJ {
-				return newError("argument to `rest` must be ARRAY, got %s", args[0].Type())
+				return newError("argument to `push` must be ARRAY, got %s", args[0].Type())
 			}
 
 			arr := args[0].(*object.Array)
@@ -89,6 +89,35 @@ var builtins = map[string]*object.Builtin{
 			newElements := make([]object.Object, length+1)
 			copy(newElements, arr.Elements)
 			newElements[length] = args[1]
+
+			return &object.Array{Elements: newElements}
+		},
+	},
+	"map": {
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 2 {
+				return newError("wrong number of arguments. got=%d, expected=2", len(args))
+			}
+			if args[0].Type() != object.ARRAY_OBJ {
+				return newError("argument to `map` must be ARRAY, got %s", args[0].Type())
+			}
+
+			arr := args[0].(*object.Array)
+
+			if args[1].Type() != object.INTEGER_OBJ {
+				return NULL
+			}
+
+			newElements := make([]object.Object, len(arr.Elements))
+			copy(newElements, arr.Elements)
+
+			for i, n := range newElements {
+				if n.Type() == object.INTEGER_OBJ {
+					val := n.(*object.Integer)
+					arg := args[1].(*object.Integer)
+					newElements[i] = &object.Integer{Value: val.Value * arg.Value}
+				}
+			}
 
 			return &object.Array{Elements: newElements}
 		},
