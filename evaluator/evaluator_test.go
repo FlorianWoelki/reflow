@@ -8,6 +8,20 @@ import (
 	"github.com/florianwoelki/reflow/parser"
 )
 
+func TestStringConcatenation(t *testing.T) {
+	input := `"Hello" + " " + "World"`
+
+	evaluated := testEval(input)
+	str, ok := evaluated.(*object.String)
+	if !ok {
+		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
+	}
+
+	if str.Value != "Hello World" {
+		t.Errorf("String has wrong value. expected=%q got=%q", "Hello World", str.Value)
+	}
+}
+
 func TestStringLiteral(t *testing.T) {
 	input := `"Hello World"`
 
@@ -126,6 +140,10 @@ func TestErrorHandling(t *testing.T) {
 		{
 			"something",
 			"identifier not found: something",
+		},
+		{
+			`"Hello" - "World"`,
+			"unknown operator: STRING - STRING",
 		},
 	}
 
