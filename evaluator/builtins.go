@@ -135,4 +135,16 @@ var builtins = map[string]*object.Builtin{
 			return NULL
 		},
 	},
+	"str": {
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return newError("wrong number of arguments. got=%d, expected=1", len(args))
+			}
+			if args[0].Type() == object.ARRAY_OBJ {
+				return newError("argument to `str` cannot be ARRAY")
+			}
+
+			return &object.String{Value: args[0].Inspect()}
+		},
+	},
 }
