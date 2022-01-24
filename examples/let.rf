@@ -1,5 +1,5 @@
-let x = 5;
-let y = 10;
-let foo = add(5, 1);
-let bar = 5 * 5 / 10 - add(5, 1);
-let something = bar;
+let x = 5
+let y = 10
+let foo = add(5, 1)
+let bar = 5 * 5 / 10 - add(5, 1)
+let something = bar

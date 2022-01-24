@@ -11,11 +11,11 @@ import (
 func TestClosures(t *testing.T) {
 	input := `
 let adder = fn(x) {
-	fn(y) { x + y };
-};
+	fn(y) { x + y }
+}
 
-let add = adder(2);
-add(4);`
+let add = adder(2)
+add(4)`
 
 	testIntegerObject(t, testEval(input), 6)
 }
@@ -25,11 +25,11 @@ func TestFunctionApplication(t *testing.T) {
 		input    string
 		expected int64
 	}{
-		{"let identity = fn(x) { x }; identity(5);", 5},
-		{"let identity = fn(x) { return x }; identity(5);", 5},
-		{"let double = fn(x) { x * 2 }; double(5);", 10},
-		{"let add = fn(x, y) { x + y }; add(5, 5);", 10},
-		{"let add = fn(x, y) { x + y }; add(5 + 5, add(5, 5));", 20},
+		{"let identity = fn(x) { x }; identity(5)", 5},
+		{"let identity = fn(x) { return x }; identity(5)", 5},
+		{"let double = fn(x) { x * 2 }; double(5)", 10},
+		{"let add = fn(x, y) { x + y }; add(5, 5)", 10},
+		{"let add = fn(x, y) { x + y }; add(5 + 5, add(5, 5))", 20},
 		{"fn(x) { x; }(5)", 5},
 	}
 
@@ -39,7 +39,7 @@ func TestFunctionApplication(t *testing.T) {
 }
 
 func TestFunctionObject(t *testing.T) {
-	input := "fn(x) { x + 2; };"
+	input := "fn(x) { x + 2; }"
 
 	evaluated := testEval(input)
 	fn, ok := evaluated.(*object.Function)
@@ -67,10 +67,10 @@ func TestLetStatements(t *testing.T) {
 		input    string
 		expected int64
 	}{
-		{"let a = 5; a;", 5},
-		{"let a = 5 * 5; a;", 25},
+		{"let a = 5; a", 5},
+		{"let a = 5 * 5; a", 25},
 		{"let a = 5; let b = 5; b", 5},
-		{"let a = 5; let b = 5; let c = a + b + 5; c;", 15},
+		{"let a = 5; let b = 5; let c = a + b + 5; c", 15},
 	}
 
 	for _, tt := range tests {
@@ -88,7 +88,7 @@ func TestErrorHandling(t *testing.T) {
 			"type mismatch: INTEGER + BOOLEAN",
 		},
 		{
-			"5 + true; 5;",
+			"5 + true; 5",
 			"type mismatch: INTEGER + BOOLEAN",
 		},
 		{
@@ -103,10 +103,10 @@ func TestErrorHandling(t *testing.T) {
 			`
 			if (10 > 1) {
 				if (10 > 1) {
-					return true + false;
+					return true + false
 				}
 
-				return 1;
+				return 1
 			}`, "unknown operator: BOOLEAN + BOOLEAN",
 		},
 		{
@@ -135,17 +135,17 @@ func TestReturnStatements(t *testing.T) {
 		input    string
 		expected int64
 	}{
-		{"return 10;", 10},
-		{"return 10; 9;", 10},
-		{"return 2 * 5; 9;", 10},
-		{"9; return 2 * 5; 9;", 10},
+		{"return 10", 10},
+		{"return 10; 9", 10},
+		{"return 2 * 5; 9", 10},
+		{"9; return 2 * 5; 9", 10},
 		{`
 		if (10 > 1) {
 			if (10 > 1) {
-				return 10;
+				return 10
 			}
 
-			return 1;
+			return 1
 		}
 		`, 10},
 	}

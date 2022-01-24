@@ -9,7 +9,7 @@ import (
 )
 
 func TestCallExpressionParsing(t *testing.T) {
-	input := "add(1, 2 * 3, 4 + 5);"
+	input := "add(1, 2 * 3, 4 + 5)"
 
 	l := lexer.New(input)
 	p := New(l)
@@ -99,9 +99,9 @@ func TestReturnStatements(t *testing.T) {
 		input               string
 		expectedReturnValue interface{}
 	}{
-		{"return 5;", "5"},
-		{"return y;", "y"},
-		{"return 123123;", "123123"},
+		{"return 5", "5"},
+		{"return y", "y"},
+		{"return 123123", "123123"},
 	}
 
 	for _, tt := range tests {
@@ -136,9 +136,9 @@ func TestLetStatements(t *testing.T) {
 		expectedIdentifier string
 		expectedValue      interface{}
 	}{
-		{"let x = 5;", "x", 5},
-		{"let y = true;", "y", true},
-		{"let foo = y;", "foo", "y"},
+		{"let x = 5", "x", 5},
+		{"let y = true", "y", true},
+		{"let foo = y", "foo", "y"},
 	}
 
 	for _, tt := range tests {
@@ -164,7 +164,7 @@ func TestLetStatements(t *testing.T) {
 }
 
 func TestIntegerLiteralExpression(t *testing.T) {
-	input := "5;"
+	input := "5"
 
 	l := lexer.New(input)
 	p := New(l)
@@ -340,9 +340,9 @@ func TestFunctionParameterParsing(t *testing.T) {
 		input          string
 		expectedParams []string
 	}{
-		{input: "fn() {};", expectedParams: []string{}},
-		{input: "fn(x) {};", expectedParams: []string{"x"}},
-		{input: "fn(x, y, z) {};", expectedParams: []string{"x", "y", "z"}},
+		{input: "fn() {}", expectedParams: []string{}},
+		{input: "fn(x) {}", expectedParams: []string{"x"}},
+		{input: "fn(x, y, z) {}", expectedParams: []string{"x", "y", "z"}},
 	}
 
 	for _, tt := range tests {
@@ -365,7 +365,7 @@ func TestFunctionParameterParsing(t *testing.T) {
 }
 
 func TestFunctionLiteral(t *testing.T) {
-	input := `fn(x, y) { x + y; }`
+	input := `fn(x, y) { x + y }`
 
 	l := lexer.New(input)
 	p := New(l)
