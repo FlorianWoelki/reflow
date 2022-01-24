@@ -1,6 +1,9 @@
 package token
 
 const (
+	LBRACKET = "["
+	RBRACKET = "]"
+
 	STRING = "STRING"
 
 	ILLEGAL = "ILLEGAL"
