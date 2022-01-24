@@ -8,6 +8,18 @@ import (
 	"github.com/florianwoelki/reflow/parser"
 )
 
+func TestClosures(t *testing.T) {
+	input := `
+let adder = fn(x) {
+	fn(y) { x + y };
+};
+
+let add = adder(2);
+add(4);`
+
+	testIntegerObject(t, testEval(input), 6)
+}
+
 func TestFunctionApplication(t *testing.T) {
 	tests := []struct {
 		input    string
