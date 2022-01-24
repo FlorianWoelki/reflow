@@ -1,6 +1,10 @@
 package evaluator
 
-import "github.com/florianwoelki/reflow/object"
+import (
+	"fmt"
+
+	"github.com/florianwoelki/reflow/object"
+)
 
 var builtins = map[string]*object.Builtin{
 	"len": {
@@ -120,6 +124,15 @@ var builtins = map[string]*object.Builtin{
 			}
 
 			return &object.Array{Elements: newElements}
+		},
+	},
+	"print": {
+		Fn: func(args ...object.Object) object.Object {
+			for _, arg := range args {
+				fmt.Println(arg.Inspect())
+			}
+
+			return NULL
 		},
 	},
 }
