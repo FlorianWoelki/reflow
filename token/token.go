@@ -1,6 +1,8 @@
 package token
 
 const (
+	STRING = "STRING"
+
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
 
