@@ -136,4 +136,32 @@ var builtins = map[string]*object.Builtin{
 			return &object.String{Value: args[0].Inspect()}
 		},
 	},
+	"find": {
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) < 2 {
+				return newError("wrong number of arguments. got=%d, expected=>=2", len(args))
+			}
+			if args[0].Type() != object.ARRAY_OBJ {
+				return newError("first argument to `map` must be ARRAY. got=%s", args[0].Type())
+			}
+			if args[1].Type() != object.FUNCTION_OBJ {
+				return newError("second argument to `map` must be FUNCTION. got=%s", args[0].Type())
+			}
+
+			newElements := make([]object.Object, len(args)-2)
+			copy(newElements, args[2:])
+
+			foundIndex := -1
+			for i, element := range newElements {
+				if element, ok := element.(*object.Boolean); ok {
+					if element.Value {
+						foundIndex = i
+						break
+					}
+				}
+			}
+
+			return &object.Integer{Value: int64(foundIndex)}
+		},
+	},
 }
