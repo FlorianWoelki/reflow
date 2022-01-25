@@ -1,7 +1,7 @@
 let five = 5
 let ten = 10
 
-let add = fn(x: int, y: int) {
+let add = fn(x, y) {
   x + y
 }
 
