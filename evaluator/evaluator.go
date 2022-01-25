@@ -178,6 +178,20 @@ func applyFunction(fn object.Object, args []object.Object) object.Object {
 		evaluated := Eval(fn.Body, extendedEnv)
 		return unwrapReturnValue(evaluated)
 	case *object.Builtin:
+		if array, ok := args[0].(*object.Array); ok {
+			if f, ok := args[1].(*object.Function); ok {
+				evaluatedElements := []object.Object{}
+				for _, arrayElement := range array.Elements {
+					extendedEnv := extendFunctionEnv(f, []object.Object{arrayElement})
+					evaluated := Eval(f.Body, extendedEnv)
+					evaluatedElements = append(evaluatedElements, unwrapReturnValue(evaluated))
+				}
+
+				args = append(args, evaluatedElements...)
+				return fn.Fn(args...)
+			}
+		}
+
 		return fn.Fn(args...)
 	default:
 		return newError("not a function: %s", fn.Type())

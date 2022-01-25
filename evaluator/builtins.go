@@ -99,29 +99,18 @@ var builtins = map[string]*object.Builtin{
 	},
 	"map": {
 		Fn: func(args ...object.Object) object.Object {
-			if len(args) != 2 {
-				return newError("wrong number of arguments. got=%d, expected=2", len(args))
+			if len(args) < 2 {
+				return newError("wrong number of arguments. got=%d, expected=>=2", len(args))
 			}
 			if args[0].Type() != object.ARRAY_OBJ {
-				return newError("argument to `map` must be ARRAY, got %s", args[0].Type())
+				return newError("first argument to `map` must be ARRAY. got=%s", args[0].Type())
+			}
+			if args[1].Type() != object.FUNCTION_OBJ {
+				return newError("second argument to `map` must be FUNCTION. got=%s", args[0].Type())
 			}
 
-			arr := args[0].(*object.Array)
-
-			if args[1].Type() != object.INTEGER_OBJ {
-				return NULL
-			}
-
-			newElements := make([]object.Object, len(arr.Elements))
-			copy(newElements, arr.Elements)
-
-			for i, n := range newElements {
-				if n.Type() == object.INTEGER_OBJ {
-					val := n.(*object.Integer)
-					arg := args[1].(*object.Integer)
-					newElements[i] = &object.Integer{Value: val.Value * arg.Value}
-				}
-			}
+			newElements := make([]object.Object, len(args)-2)
+			copy(newElements, args[2:])
 
 			return &object.Array{Elements: newElements}
 		},
