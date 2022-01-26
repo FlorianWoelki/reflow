@@ -78,6 +78,26 @@ var builtins = map[string]*object.Builtin{
 			return NULL
 		},
 	},
+	"pop": {
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return newError("wrong number of arguments. got=%d, expected=1", len(args))
+			}
+			if args[0].Type() != object.ARRAY_OBJ {
+				return newError("argument to `pop` must be ARRAY, got %s", args[0].Type())
+			}
+
+			array := args[0].(*object.Array)
+			length := len(array.Elements)
+
+			newElements := make([]object.Object, length-1)
+			for i := 0; i < length-1; i++ {
+				newElements[i] = array.Elements[i]
+			}
+
+			return &object.Array{Elements: newElements}
+		},
+	},
 	"push": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 2 {
@@ -142,10 +162,10 @@ var builtins = map[string]*object.Builtin{
 				return newError("wrong number of arguments. got=%d, expected=>=2", len(args))
 			}
 			if args[0].Type() != object.ARRAY_OBJ {
-				return newError("first argument to `map` must be ARRAY. got=%s", args[0].Type())
+				return newError("first argument to `find` must be ARRAY. got=%s", args[0].Type())
 			}
 			if args[1].Type() != object.FUNCTION_OBJ {
-				return newError("second argument to `map` must be FUNCTION. got=%s", args[0].Type())
+				return newError("second argument to `find` must be FUNCTION. got=%s", args[0].Type())
 			}
 
 			newElements := make([]object.Object, len(args)-2)

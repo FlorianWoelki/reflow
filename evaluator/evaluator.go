@@ -178,7 +178,7 @@ func applyFunction(fn object.Object, args []object.Object) object.Object {
 		evaluated := Eval(fn.Body, extendedEnv)
 		return unwrapReturnValue(evaluated)
 	case *object.Builtin:
-		if array, ok := args[0].(*object.Array); ok {
+		if array, ok := args[0].(*object.Array); ok && len(args) > 1 {
 			if f, ok := args[1].(*object.Function); ok {
 				evaluatedElements := []object.Object{}
 				for _, arrayElement := range array.Elements {
