@@ -177,9 +177,6 @@ var builtins = map[string]*object.Builtin{
 			}
 
 			array := args[0].(*object.Array)
-			newElements := make([]object.Object, len(args)-2)
-			copy(newElements, args[2:])
-
 			var filteredElements []object.Object
 			for i := 2; i < len(args); i++ {
 				element := args[i]
