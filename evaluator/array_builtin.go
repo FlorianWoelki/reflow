@@ -2,7 +2,7 @@ package evaluator
 
 import "github.com/florianwoelki/reflow/object"
 
-func First(args ...object.Object) object.Object {
+func builtinFirst(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return newError("wrong number of arguments. got=%d, expected=1", len(args))
 	}
@@ -18,7 +18,7 @@ func First(args ...object.Object) object.Object {
 	return NULL
 }
 
-func Last(args ...object.Object) object.Object {
+func builtinLast(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return newError("wrong number of arguments. got=%d, expected=1", len(args))
 	}
@@ -35,7 +35,7 @@ func Last(args ...object.Object) object.Object {
 	return NULL
 }
 
-func Rest(args ...object.Object) object.Object {
+func builtinRest(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return newError("wrong number of arguments. got=%d, expected=1", len(args))
 	}
@@ -54,7 +54,7 @@ func Rest(args ...object.Object) object.Object {
 	return NULL
 }
 
-func Pop(args ...object.Object) object.Object {
+func builtinPop(args ...object.Object) object.Object {
 	if len(args) != 1 {
 		return newError("wrong number of arguments. got=%d, expected=1", len(args))
 	}
@@ -73,7 +73,7 @@ func Pop(args ...object.Object) object.Object {
 	return &object.Array{Elements: newElements}
 }
 
-func Push(args ...object.Object) object.Object {
+func builtinPush(args ...object.Object) object.Object {
 	if len(args) != 2 {
 		return newError("wrong number of arguments. got=%d, expected=2", len(args))
 	}
@@ -91,7 +91,7 @@ func Push(args ...object.Object) object.Object {
 	return &object.Array{Elements: newElements}
 }
 
-func Map(args ...object.Object) object.Object {
+func builtinMap(args ...object.Object) object.Object {
 	if len(args) < 2 {
 		return newError("wrong number of arguments. got=%d, expected=>=2", len(args))
 	}
@@ -108,7 +108,7 @@ func Map(args ...object.Object) object.Object {
 	return &object.Array{Elements: newElements}
 }
 
-func Find(args ...object.Object) object.Object {
+func builtinFind(args ...object.Object) object.Object {
 	if len(args) < 2 {
 		return newError("wrong number of arguments. got=%d, expected=>=2", len(args))
 	}
@@ -135,7 +135,7 @@ func Find(args ...object.Object) object.Object {
 	return &object.Integer{Value: int64(foundIndex)}
 }
 
-func Filter(args ...object.Object) object.Object {
+func builtinFilter(args ...object.Object) object.Object {
 	if len(args) < 2 {
 		return newError("wrong number of arguments. got=%d, expected=>=2", len(args))
 	}
