@@ -164,4 +164,33 @@ var builtins = map[string]*object.Builtin{
 			return &object.Integer{Value: int64(foundIndex)}
 		},
 	},
+	"filter": {
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) < 2 {
+				return newError("wrong number of arguments. got=%d, expected=>=2", len(args))
+			}
+			if args[0].Type() != object.ARRAY_OBJ {
+				return newError("first argument to `filter` must be ARRAY. got=%s", args[0].Type())
+			}
+			if args[1].Type() != object.FUNCTION_OBJ {
+				return newError("second argument to `filter` must be FUNCTION. got=%s", args[0].Type())
+			}
+
+			array := args[0].(*object.Array)
+			newElements := make([]object.Object, len(args)-2)
+			copy(newElements, args[2:])
+
+			var filteredElements []object.Object
+			for i := 2; i < len(args); i++ {
+				element := args[i]
+				if element, ok := element.(*object.Boolean); ok {
+					if element.Value {
+						filteredElements = append(filteredElements, array.Elements[i-2])
+					}
+				}
+			}
+
+			return &object.Array{Elements: filteredElements}
+		},
+	},
 }
