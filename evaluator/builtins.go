@@ -22,7 +22,6 @@ func builtinLen(args ...object.Object) object.Object {
 }
 
 func builtinPrint(args ...object.Object) object.Object {
-
 	for _, arg := range args {
 		fmt.Println(arg.Inspect())
 	}

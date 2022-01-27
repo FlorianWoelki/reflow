@@ -64,3 +64,43 @@ func TestBuiltinLen(t *testing.T) {
 		t.Errorf("result for integer should return an error. got=%v (%+v)", result, result)
 	}
 }
+
+func TestBuiltinStr(t *testing.T) {
+	tests := []struct {
+		input    object.Object
+		expected string
+	}{
+		{
+			input:    &object.Array{Elements: []object.Object{&object.Integer{Value: 1}}},
+			expected: "ERROR: argument to `str` cannot be ARRAY",
+		},
+		{
+			input:    &object.Boolean{Value: true},
+			expected: "true",
+		},
+		{
+			input:    &object.Boolean{Value: false},
+			expected: "false",
+		},
+		{
+			input:    &object.Integer{Value: 1},
+			expected: "1",
+		},
+		{
+			input:    &object.String{Value: "hello"},
+			expected: "hello",
+		},
+	}
+
+	result := builtinStr()
+	if result.Type() != object.ERROR_OBJ {
+		t.Errorf("wrong result of type for empty args. expected=%s, got=%s", object.ERROR_OBJ, result.Type())
+	}
+
+	for _, tt := range tests {
+		result = builtinStr(tt.input)
+		if result.Inspect() != tt.expected {
+			t.Errorf("wrong parsed result. expected=%s, got=%s", tt.expected, result.Inspect())
+		}
+	}
+}
