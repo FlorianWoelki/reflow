@@ -59,4 +59,8 @@ func TestBuiltinLen(t *testing.T) {
 		t.Errorf("result for array is of wrong length. expected=%d, got=%d", len(str), parsedLen)
 	}
 
+	result = builtinLen(&object.Integer{Value: 1})
+	if result.Type() != object.ERROR_OBJ {
+		t.Errorf("result for integer should return an error. got=%v (%+v)", result, result)
+	}
 }
