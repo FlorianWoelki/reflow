@@ -7,6 +7,54 @@ import (
 	"github.com/florianwoelki/reflow/object"
 )
 
+func TestBuiltinsRest(t *testing.T) {
+	result := builtinRest()
+	if result.Type() != object.ERROR_OBJ {
+		t.Errorf("function call without parameters gave no error back. got=%s", result.Type())
+	}
+
+	result = builtinRest(&object.Integer{Value: 3})
+	if result.Type() != object.ERROR_OBJ {
+		t.Errorf("function call with wrong parameter gave no error back. got=%s", result.Type())
+	}
+
+	elements := []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}, &object.Integer{Value: 3}, &object.Integer{Value: 4}}
+	result = builtinRest(&object.Array{Elements: elements})
+	if result.Type() == NULL.Type() {
+		t.Errorf("function call with array parameter did not return NULL. got=%s", result.Type())
+	}
+
+	if result.Type() != object.ARRAY_OBJ {
+		t.Errorf("function call with array parameter returned the wrong type. expected=%s, got=%s", object.ARRAY_OBJ, result.Type())
+	}
+
+	if result.Inspect() != "[2, 3, 4]" {
+		t.Errorf("function call with array parameter returned the wrong value. expected=%s, got=%s", "[2, 3, 4]", result.Inspect())
+	}
+}
+
+func TestBuiltinsLast(t *testing.T) {
+	result := builtinLast()
+	if result.Type() != object.ERROR_OBJ {
+		t.Errorf("function call without parameters gave no error back. got=%s", result.Type())
+	}
+
+	result = builtinLast(&object.Integer{Value: 3})
+	if result.Type() != object.ERROR_OBJ {
+		t.Errorf("function call with wrong parameter gave no error back. got=%s", result.Type())
+	}
+
+	elements := []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}}
+	result = builtinLast(&object.Array{Elements: elements})
+	if result.Type() == NULL.Type() {
+		t.Errorf("function call with array parameter did not return NULL. got=%s", result.Type())
+	}
+
+	if result.Inspect() != elements[len(elements)-1].Inspect() {
+		t.Errorf("function call with array parameter did not return the correct result. expected=%s, got=%s", elements[0].Inspect(), result.Inspect())
+	}
+}
+
 func TestBuiltinsFirst(t *testing.T) {
 	result := builtinFirst()
 	if result.Type() != object.ERROR_OBJ {
