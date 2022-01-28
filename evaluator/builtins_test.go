@@ -7,6 +7,58 @@ import (
 	"github.com/florianwoelki/reflow/object"
 )
 
+func TestBuiltinsPush(t *testing.T) {
+	result := builtinPush()
+	if result.Type() != object.ERROR_OBJ {
+		t.Errorf("function call without parameters gave no error back. got=%s", result.Type())
+	}
+
+	result = builtinPush(&object.Integer{Value: 3})
+	if result.Type() != object.ERROR_OBJ {
+		t.Errorf("function call with wrong parameter gave no error back. got=%s", result.Type())
+	}
+
+	elements := []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}, &object.Integer{Value: 3}, &object.Integer{Value: 4}}
+	result = builtinPush(&object.Array{Elements: elements}, &object.Integer{Value: 5})
+	if result.Type() != object.ARRAY_OBJ {
+		t.Errorf("function call with array parameter returned the wrong type. expected=%s, got=%s", object.ARRAY_OBJ, result.Type())
+	}
+
+	if len(result.(*object.Array).Elements) != 5 {
+		t.Errorf("function call with array parameter returned the wrong length of array. expected=%d, got=%d", 5, len(result.(*object.Array).Elements))
+	}
+
+	if result.Inspect() != "[1, 2, 3, 4, 5]" {
+		t.Errorf("function call with array parameter did return the wrong value. expected=%s, got=%s", "[1, 2, 3, 4, 5]", result.Inspect())
+	}
+}
+
+func TestBuiltinsPop(t *testing.T) {
+	result := builtinPop()
+	if result.Type() != object.ERROR_OBJ {
+		t.Errorf("function call without parameters gave no error back. got=%s", result.Type())
+	}
+
+	result = builtinPop(&object.Integer{Value: 3})
+	if result.Type() != object.ERROR_OBJ {
+		t.Errorf("function call with wrong parameter gave no error back. got=%s", result.Type())
+	}
+
+	elements := []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}, &object.Integer{Value: 3}, &object.Integer{Value: 4}}
+	result = builtinPop(&object.Array{Elements: elements})
+	if result.Type() == NULL.Type() {
+		t.Errorf("function call with array parameter did not return NULL. got=%s", result.Type())
+	}
+
+	if result.Type() != object.ARRAY_OBJ {
+		t.Errorf("function call with array parameter returned the wrong type. expected=%s, got=%s", object.ARRAY_OBJ, result.Type())
+	}
+
+	if result.Inspect() != "[1, 2, 3]" {
+		t.Errorf("function call with array parameter did return the wrong value. expected=%s, got=%s", "4", result.Inspect())
+	}
+}
+
 func TestBuiltinsRest(t *testing.T) {
 	result := builtinRest()
 	if result.Type() != object.ERROR_OBJ {
