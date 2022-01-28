@@ -6,6 +6,43 @@ import (
 	"github.com/florianwoelki/reflow/object"
 )
 
+func TestBuiltinPush(t *testing.T) {
+	tests := []builtinTest{
+		{
+			input:           "push(4)",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "push()",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "push([1, 2, 3])",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "push([1, 2, 3, 4], 5)",
+			expected:        "[1, 2, 3, 4, 5]",
+			expectedObjType: object.ARRAY_OBJ,
+		},
+		{
+			input:           "push([1], 2)",
+			expected:        "[1, 2]",
+			expectedObjType: object.ARRAY_OBJ,
+		},
+		{
+			input:           "push([], 1)",
+			expected:        "[1]",
+			expectedObjType: object.ARRAY_OBJ,
+		},
+	}
+
+	testInput(t, "push", tests)
+}
+
 func TestBuiltinPop(t *testing.T) {
 	tests := []builtinTest{
 		{
