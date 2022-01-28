@@ -6,6 +6,80 @@ import (
 	"github.com/florianwoelki/reflow/object"
 )
 
+func TestBuiltinFilter(t *testing.T) {
+	tests := []builtinTest{
+		{
+			input:           "filter(4)",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "filter()",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "filter([1, 2, 3])",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "filter([1, 2, 3, 4], 5)",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "filter([1, 2, 3, 4], fn(x) { x < 3 })",
+			expected:        "[1, 2]",
+			expectedObjType: object.ARRAY_OBJ,
+		},
+		{
+			input:           "filter([1, 2, 3, 4], fn(x) { true })",
+			expected:        "[1, 2, 3, 4]",
+			expectedObjType: object.ARRAY_OBJ,
+		},
+	}
+
+	testInput(t, "filter", tests)
+}
+
+func TestBuiltinFind(t *testing.T) {
+	tests := []builtinTest{
+		{
+			input:           "find(4)",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "find()",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "find([1, 2, 3])",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "find([1, 2, 3, 4], 5)",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "find([1, 2, 3, 4], fn(x) { x == 2 })",
+			expected:        "1",
+			expectedObjType: object.INTEGER_OBJ,
+		},
+		{
+			input:           "find([1, 2, 3, 4], fn(x) { true })",
+			expected:        "0",
+			expectedObjType: object.INTEGER_OBJ,
+		},
+	}
+
+	testInput(t, "find", tests)
+}
+
 func TestBuiltinPush(t *testing.T) {
 	tests := []builtinTest{
 		{
