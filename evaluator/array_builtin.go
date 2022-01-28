@@ -65,6 +65,10 @@ func builtinPop(args ...object.Object) object.Object {
 	array := args[0].(*object.Array)
 	length := len(array.Elements)
 
+	if length == 0 {
+		return array
+	}
+
 	newElements := make([]object.Object, length-1)
 	for i := 0; i < length-1; i++ {
 		newElements[i] = array.Elements[i]
