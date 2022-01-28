@@ -1,135 +1,155 @@
 package evaluator
 
 import (
-	"strconv"
 	"testing"
 
 	"github.com/florianwoelki/reflow/object"
 )
 
-func TestBuiltinsPush(t *testing.T) {
-	result := builtinPush()
-	if result.Type() != object.ERROR_OBJ {
-		t.Errorf("function call without parameters gave no error back. got=%s", result.Type())
+func TestBuiltinRest(t *testing.T) {
+	tests := []builtinTest{
+		{
+			input:           "rest(4)",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "rest()",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "rest([1, 2, 3, 4], 4)",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "rest([1, 2, 3, 4])",
+			expected:        "[2, 3, 4]",
+			expectedObjType: object.ARRAY_OBJ,
+		},
+		{
+			input:           "last([1])",
+			expected:        "1",
+			expectedObjType: object.INTEGER_OBJ,
+		},
+		{
+			input:           "last([])",
+			expected:        "null",
+			expectedObjType: object.NULL_OBJ,
+		},
 	}
 
-	result = builtinPush(&object.Integer{Value: 3})
-	if result.Type() != object.ERROR_OBJ {
-		t.Errorf("function call with wrong parameter gave no error back. got=%s", result.Type())
-	}
-
-	elements := []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}, &object.Integer{Value: 3}, &object.Integer{Value: 4}}
-	result = builtinPush(&object.Array{Elements: elements}, &object.Integer{Value: 5})
-	if result.Type() != object.ARRAY_OBJ {
-		t.Errorf("function call with array parameter returned the wrong type. expected=%s, got=%s", object.ARRAY_OBJ, result.Type())
-	}
-
-	if len(result.(*object.Array).Elements) != 5 {
-		t.Errorf("function call with array parameter returned the wrong length of array. expected=%d, got=%d", 5, len(result.(*object.Array).Elements))
-	}
-
-	if result.Inspect() != "[1, 2, 3, 4, 5]" {
-		t.Errorf("function call with array parameter did return the wrong value. expected=%s, got=%s", "[1, 2, 3, 4, 5]", result.Inspect())
-	}
+	testInput(t, "rest", tests)
 }
 
-func TestBuiltinsPop(t *testing.T) {
-	result := builtinPop()
-	if result.Type() != object.ERROR_OBJ {
-		t.Errorf("function call without parameters gave no error back. got=%s", result.Type())
+func TestBuiltinLast(t *testing.T) {
+	tests := []builtinTest{
+		{
+			input:           "last(4)",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "last()",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "last([1, 2, 3, 4], 4)",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "last([1, 2, 3, 4])",
+			expected:        "4",
+			expectedObjType: object.INTEGER_OBJ,
+		},
+		{
+			input:           "last([1])",
+			expected:        "1",
+			expectedObjType: object.INTEGER_OBJ,
+		},
+		{
+			input:           "last([])",
+			expected:        "null",
+			expectedObjType: object.NULL_OBJ,
+		},
 	}
 
-	result = builtinPop(&object.Integer{Value: 3})
-	if result.Type() != object.ERROR_OBJ {
-		t.Errorf("function call with wrong parameter gave no error back. got=%s", result.Type())
-	}
-
-	elements := []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}, &object.Integer{Value: 3}, &object.Integer{Value: 4}}
-	result = builtinPop(&object.Array{Elements: elements})
-	if result.Type() == NULL.Type() {
-		t.Errorf("function call with array parameter did not return NULL. got=%s", result.Type())
-	}
-
-	if result.Type() != object.ARRAY_OBJ {
-		t.Errorf("function call with array parameter returned the wrong type. expected=%s, got=%s", object.ARRAY_OBJ, result.Type())
-	}
-
-	if result.Inspect() != "[1, 2, 3]" {
-		t.Errorf("function call with array parameter did return the wrong value. expected=%s, got=%s", "4", result.Inspect())
-	}
+	testInput(t, "last", tests)
 }
 
-func TestBuiltinsRest(t *testing.T) {
-	result := builtinRest()
-	if result.Type() != object.ERROR_OBJ {
-		t.Errorf("function call without parameters gave no error back. got=%s", result.Type())
+func TestBuiltinFirst(t *testing.T) {
+	tests := []builtinTest{
+		{
+			input:           "first(4)",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "first()",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "first([1, 2, 3, 4], 4)",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "first([1, 2, 3, 4])",
+			expected:        "1",
+			expectedObjType: object.INTEGER_OBJ,
+		},
+		{
+			input:           "first([1])",
+			expected:        "1",
+			expectedObjType: object.INTEGER_OBJ,
+		},
+		{
+			input:           "first([])",
+			expected:        "null",
+			expectedObjType: object.NULL_OBJ,
+		},
 	}
 
-	result = builtinRest(&object.Integer{Value: 3})
-	if result.Type() != object.ERROR_OBJ {
-		t.Errorf("function call with wrong parameter gave no error back. got=%s", result.Type())
-	}
-
-	elements := []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}, &object.Integer{Value: 3}, &object.Integer{Value: 4}}
-	result = builtinRest(&object.Array{Elements: elements})
-	if result.Type() == NULL.Type() {
-		t.Errorf("function call with array parameter did not return NULL. got=%s", result.Type())
-	}
-
-	if result.Type() != object.ARRAY_OBJ {
-		t.Errorf("function call with array parameter returned the wrong type. expected=%s, got=%s", object.ARRAY_OBJ, result.Type())
-	}
-
-	if result.Inspect() != "[2, 3, 4]" {
-		t.Errorf("function call with array parameter returned the wrong value. expected=%s, got=%s", "[2, 3, 4]", result.Inspect())
-	}
+	testInput(t, "first", tests)
 }
 
-func TestBuiltinsLast(t *testing.T) {
-	result := builtinLast()
-	if result.Type() != object.ERROR_OBJ {
-		t.Errorf("function call without parameters gave no error back. got=%s", result.Type())
+func TestBuiltinMap(t *testing.T) {
+	tests := []builtinTest{
+		{
+			input:           "map(4, fn(x) { x * 2})",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "map([1, 2, 3, 4])",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "map()",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "map([1, 2, 3, 4], 4)",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "map([1, 2, 3], fn(x) { x * 2})",
+			expected:        "[2, 4, 6]",
+			expectedObjType: object.ARRAY_OBJ,
+		},
 	}
 
-	result = builtinLast(&object.Integer{Value: 3})
-	if result.Type() != object.ERROR_OBJ {
-		t.Errorf("function call with wrong parameter gave no error back. got=%s", result.Type())
-	}
-
-	elements := []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}}
-	result = builtinLast(&object.Array{Elements: elements})
-	if result.Type() == NULL.Type() {
-		t.Errorf("function call with array parameter did not return NULL. got=%s", result.Type())
-	}
-
-	if result.Inspect() != elements[len(elements)-1].Inspect() {
-		t.Errorf("function call with array parameter did not return the correct result. expected=%s, got=%s", elements[0].Inspect(), result.Inspect())
-	}
+	testInput(t, "map", tests)
 }
 
-func TestBuiltinsFirst(t *testing.T) {
-	result := builtinFirst()
-	if result.Type() != object.ERROR_OBJ {
-		t.Errorf("function call without parameters gave no error back. got=%s", result.Type())
-	}
-
-	result = builtinFirst(&object.Integer{Value: 3})
-	if result.Type() != object.ERROR_OBJ {
-		t.Errorf("function call with wrong parameter gave no error back. got=%s", result.Type())
-	}
-
-	elements := []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}}
-	result = builtinFirst(&object.Array{Elements: elements})
-	if result.Type() == NULL.Type() {
-		t.Errorf("function call with array parameter did not return NULL. got=%s", result.Type())
-	}
-
-	if result.Inspect() != elements[0].Inspect() {
-		t.Errorf("function call with array parameter did not return the correct result. expected=%s, got=%s", elements[0].Inspect(), result.Inspect())
-	}
-}
-
-func TestBuiltins(t *testing.T) {
+func TestBuiltinsLength(t *testing.T) {
 	expectedFunctions := []string{"len", "print", "str", "first", "last", "rest", "pop", "push", "map", "find", "filter"}
 
 	if len(builtins) != len(expectedFunctions) {
@@ -145,84 +165,25 @@ func TestBuiltins(t *testing.T) {
 	}
 }
 
-func TestBuiltinLen(t *testing.T) {
-	result := builtinLen()
-	if result.Type() != object.ERROR_OBJ {
-		t.Errorf("result for empty args is of wrong type. expected=%s, got=%s", object.ERROR_OBJ, result.Type())
-	}
-
-	str := "Hello World"
-	result = builtinLen(&object.String{Value: str})
-	if result.Type() != object.INTEGER_OBJ {
-		t.Errorf("result for string is of wrong type. expected=%s, got=%s", object.INTEGER_OBJ, result.Type())
-	}
-
-	parsedLen, err := strconv.Atoi(result.Inspect())
-	if err != nil {
-		t.Errorf("received error while parsing length of string. got=%s", err)
-	}
-
-	if parsedLen != len(str) {
-		t.Errorf("result for string is of wrong length. expected=%d, got=%d", len(str), parsedLen)
-	}
-
-	arr := &object.Array{Elements: []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 1}}}
-	result = builtinLen(arr)
-	if result.Type() != object.INTEGER_OBJ {
-		t.Errorf("result for array is of wrong type. expected=%s, got=%s", object.INTEGER_OBJ, result.Type())
-	}
-
-	parsedLen, err = strconv.Atoi(result.Inspect())
-	if err != nil {
-		t.Errorf("received error while parsing length of array. got=%s", err)
-	}
-
-	if parsedLen != len(arr.Elements) {
-		t.Errorf("result for array is of wrong length. expected=%d, got=%d", len(str), parsedLen)
-	}
-
-	result = builtinLen(&object.Integer{Value: 1})
-	if result.Type() != object.ERROR_OBJ {
-		t.Errorf("result for integer should return an error. got=%v (%+v)", result, result)
-	}
+type builtinTest struct {
+	input           string
+	expected        string
+	expectedObjType object.ObjectType
 }
 
-func TestBuiltinStr(t *testing.T) {
-	tests := []struct {
-		input    object.Object
-		expected string
-	}{
-		{
-			input:    &object.Array{Elements: []object.Object{&object.Integer{Value: 1}}},
-			expected: "ERROR: argument to `str` cannot be ARRAY",
-		},
-		{
-			input:    &object.Boolean{Value: true},
-			expected: "true",
-		},
-		{
-			input:    &object.Boolean{Value: false},
-			expected: "false",
-		},
-		{
-			input:    &object.Integer{Value: 1},
-			expected: "1",
-		},
-		{
-			input:    &object.String{Value: "hello"},
-			expected: "hello",
-		},
-	}
-
-	result := builtinStr()
-	if result.Type() != object.ERROR_OBJ {
-		t.Errorf("wrong result of type for empty args. expected=%s, got=%s", object.ERROR_OBJ, result.Type())
-	}
-
+func testInput(t *testing.T, builtinFn string, tests []builtinTest) {
 	for _, tt := range tests {
-		result = builtinStr(tt.input)
-		if result.Inspect() != tt.expected {
-			t.Errorf("wrong parsed result. expected=%s, got=%s", tt.expected, result.Inspect())
+		output := testEval(tt.input)
+		if output.Type() != tt.expectedObjType {
+			t.Errorf("builtin %s function test returned not the expected object type. expected=%s, got=%s", builtinFn, tt.expectedObjType, output.Type())
+		}
+
+		if output.Type() == object.ERROR_OBJ {
+			continue
+		}
+
+		if output.Inspect() != tt.expected {
+			t.Errorf("builtin %s function test returned not the correct value. expected=%s, got=%s", builtinFn, tt.expected, output.Inspect())
 		}
 	}
 }
