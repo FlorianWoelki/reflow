@@ -7,6 +7,28 @@ import (
 	"github.com/florianwoelki/reflow/object"
 )
 
+func TestBuiltinsFirst(t *testing.T) {
+	result := builtinFirst()
+	if result.Type() != object.ERROR_OBJ {
+		t.Errorf("function call without parameters gave no error back. got=%s", result.Type())
+	}
+
+	result = builtinFirst(&object.Integer{Value: 3})
+	if result.Type() != object.ERROR_OBJ {
+		t.Errorf("function call with wrong parameter gave no error back. got=%s", result.Type())
+	}
+
+	elements := []object.Object{&object.Integer{Value: 1}, &object.Integer{Value: 2}}
+	result = builtinFirst(&object.Array{Elements: elements})
+	if result.Type() == NULL.Type() {
+		t.Errorf("function call with array parameter did not return NULL. got=%s", result.Type())
+	}
+
+	if result.Inspect() != elements[0].Inspect() {
+		t.Errorf("function call with array parameter did not return the correct result. expected=%s, got=%s", elements[0].Inspect(), result.Inspect())
+	}
+}
+
 func TestBuiltins(t *testing.T) {
 	expectedFunctions := []string{"len", "print", "str", "first", "last", "rest", "pop", "push", "map", "find", "filter"}
 
