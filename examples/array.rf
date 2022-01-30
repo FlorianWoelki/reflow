@@ -1,0 +1,11 @@
+let array = [1, 2, 3, 4]
+
+print(array[0])
+print(first(array))
+print(last(array))
+print(rest(array))
+print(pop(array))
+print(push(array, 1))
+print(find(array, fn(x) { x == 1 }))
+print(filter(array, fn(x) { x >= 2 }))
+print(map(array, fn(x) { x * 2 }))
