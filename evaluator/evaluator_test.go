@@ -15,6 +15,7 @@ func TestAssignmentStatement(t *testing.T) {
 	}{
 		{"let i = 0; i = 5; i", 5},
 		{"let i = 1; i = i + 5; i", 6},
+		{"b = 4", "identifier 'b' not found"},
 	}
 
 	for _, tt := range tests {
@@ -23,7 +24,12 @@ func TestAssignmentStatement(t *testing.T) {
 		if ok {
 			testIntegerObject(t, evaluated, int64(integer))
 		} else {
-			testNullObject(t, evaluated)
+			errObj, ok := evaluated.(*object.Error)
+			if ok {
+				if errObj.Message != tt.expected {
+					t.Errorf("wrong error message. expected=%q, got=%q", tt.expected, errObj.Message)
+				}
+			}
 		}
 	}
 }

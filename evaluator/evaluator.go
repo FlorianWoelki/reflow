@@ -109,6 +109,10 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return val
 		}
 
+		if _, ok := env.Get(node.Name.Value); !ok {
+			return newError("identifier '%s' not found", node.Name.Value)
+		}
+
 		env.Set(node.Name.Value, val)
 	}
 
