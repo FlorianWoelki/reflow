@@ -40,7 +40,7 @@ func TestWhileExpressions(t *testing.T) {
 		expected interface{}
 	}{
 		{"let i = 0; while (i > 5) { i = i + 1; }; i", 0},
-		{"let i = 0; while (i < 5) { i = i + 1; }; i", 4},
+		{"let i = 0; while (i < 5) { i = i + 1; }; i", 5},
 	}
 
 	for _, tt := range tests {

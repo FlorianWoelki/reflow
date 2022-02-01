@@ -131,10 +131,10 @@ func evalWhileExpression(we *ast.WhileExpression, env *object.Environment) objec
 			return body
 		}
 
-		return NULL
-	} else {
-		return NULL
+		return evalWhileExpression(we, env)
 	}
+
+	return NULL
 }
 
 func evalHashLiteral(node *ast.HashLiteral, env *object.Environment) object.Object {
