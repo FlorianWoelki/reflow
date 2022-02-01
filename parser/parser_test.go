@@ -8,6 +8,53 @@ import (
 	"github.com/florianwoelki/reflow/lexer"
 )
 
+func testAssignmentStatement(t *testing.T, s ast.Statement, name string) bool {
+	assignmentStmt, ok := s.(*ast.AssignmentStatement)
+	if !ok {
+		t.Errorf("s not *ast.AssignmentStatement. got=%T", s)
+		return false
+	}
+
+	if assignmentStmt.Name.Value != name {
+		t.Errorf("assignmentStmt.Name.Value not '%s'. got=%s", name, assignmentStmt.Name.Value)
+		return false
+	}
+
+	return true
+}
+
+func TestAssignmentExpression(t *testing.T) {
+	tests := []struct {
+		input              string
+		expectedIdentifier string
+		expectedValue      string
+	}{
+		{"x = 5", "x", "5"},
+		{"x = x + 5", "x", "(x + 5)"},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		if len(program.Statements) != 1 {
+			t.Fatalf("program.Statements does not contain 1 statements. got=%d", len(program.Statements))
+		}
+
+		stmt := program.Statements[0]
+		if !testAssignmentStatement(t, stmt, tt.expectedIdentifier) {
+			return
+		}
+
+		val := stmt.(*ast.AssignmentStatement).Value
+		if val.String() != tt.expectedValue {
+			t.Errorf("val.String() is not the expected value. expected=%s, got=%s", tt.expectedValue, val.String())
+		}
+	}
+}
+
 func TestWhileExpression(t *testing.T) {
 	input := `while (x < y) { x }`
 
