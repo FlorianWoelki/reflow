@@ -8,6 +8,26 @@ import (
 	"github.com/florianwoelki/reflow/parser"
 )
 
+func TestAssignmentStatement(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{"let i = 0; i = 5; i", 5},
+		{"let i = 1; i = i + 5; i", 6},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		integer, ok := tt.expected.(int)
+		if ok {
+			testIntegerObject(t, evaluated, int64(integer))
+		} else {
+			testNullObject(t, evaluated)
+		}
+	}
+}
+
 func TestWhileExpressions(t *testing.T) {
 	tests := []struct {
 		input    string
