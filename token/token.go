@@ -13,16 +13,20 @@ const (
 	INT   = "INT"   // Simple numbers
 
 	// Operators
-	ASSIGN   = "="
-	PLUS     = "+"
-	MINUS    = "-"
-	BANG     = "!"
-	ASTERISK = "*"
-	SLASH    = "/"
-	LT       = "<"
-	GT       = ">"
-	EQ       = "=="
-	NOT_EQ   = "!="
+	ASSIGN          = "="
+	PLUS            = "+"
+	MINUS           = "-"
+	BANG            = "!"
+	ASTERISK        = "*"
+	SLASH           = "/"
+	LT              = "<"
+	GT              = ">"
+	EQ              = "=="
+	NOT_EQ          = "!="
+	PLUS_ASSIGN     = "+="
+	MINUS_ASSIGN    = "-="
+	ASTERISK_ASSIGN = "*="
+	SLASH_ASSIGN    = "/="
 
 	// Delimiters
 	COMMA     = ","
