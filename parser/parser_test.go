@@ -27,14 +27,15 @@ func TestAssignmentExpression(t *testing.T) {
 	tests := []struct {
 		input              string
 		expectedIdentifier string
+		expectedOperator   string
 		expectedValue      string
 	}{
-		{"x = 5", "x", "5"},
-		{"x = x + 5", "x", "(x + 5)"},
-		{"x += 1", "x", "1"},
-		{"x -= 1", "x", "1"},
-		{"x *= 1", "x", "1"},
-		{"x /= 1", "x", "1"},
+		{"x = 5", "x", "=", "5"},
+		{"x = x + 5", "x", "=", "(x + 5)"},
+		{"x += 1", "x", "+=", "1"},
+		{"x -= 1", "x", "-=", "1"},
+		{"x *= 1", "x", "*=", "1"},
+		{"x /= 1", "x", "/=", "1"},
 	}
 
 	for _, tt := range tests {
@@ -52,9 +53,13 @@ func TestAssignmentExpression(t *testing.T) {
 			return
 		}
 
-		val := stmt.(*ast.AssignmentStatement).Value
-		if val.String() != tt.expectedValue {
-			t.Errorf("val.String() is not the expected value. expected=%s, got=%s", tt.expectedValue, val.String())
+		assignmentStmt := stmt.(*ast.AssignmentStatement)
+		if assignmentStmt.Value.String() != tt.expectedValue {
+			t.Errorf("assignmentStmt.Value.String() is not the expected value. expected=%s, got=%s", tt.expectedValue, assignmentStmt.Value.String())
+		}
+
+		if assignmentStmt.Operator != tt.expectedOperator {
+			t.Errorf("assignmentStmt.Operator is not the expected value. expected=%s, got=%s", tt.expectedOperator, assignmentStmt.Operator)
 		}
 	}
 }

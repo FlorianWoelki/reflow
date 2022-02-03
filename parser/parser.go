@@ -100,8 +100,9 @@ func (p *Parser) parseIdentAssignment(operator token.TokenType) ast.Statement {
 		return nil
 	}
 
-	p.nextToken()
+	stmt.Operator = string(operator)
 
+	p.nextToken()
 	stmt.Value = p.parseExpression(LOWEST)
 
 	if p.peekTokenIs(token.SEMICOLON) {
