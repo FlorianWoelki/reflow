@@ -88,10 +88,6 @@ func New(l *lexer.Lexer) *Parser {
 }
 
 func (p *Parser) parseIdentAssignment(operator token.TokenType) ast.Statement {
-	if p.curToken.Type != token.IDENT {
-		return nil
-	}
-
 	stmt := &ast.AssignmentStatement{}
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
@@ -104,6 +100,8 @@ func (p *Parser) parseIdentAssignment(operator token.TokenType) ast.Statement {
 
 	p.nextToken()
 	stmt.Value = p.parseExpression(LOWEST)
+
+	stmt.Assignment = &ast.InfixExpression{Left: stmt.Name, Operator: string(stmt.Operator[0]), Right: stmt.Value}
 
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()

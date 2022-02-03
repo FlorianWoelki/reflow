@@ -15,7 +15,12 @@ func TestAssignmentStatement(t *testing.T) {
 	}{
 		{"let i = 0; i = 5; i", 5},
 		{"let i = 1; i = i + 5; i", 6},
-		{"b = 4", "identifier 'b' not found"},
+		{"b = 4", "identifier not found: b"},
+		{"b += 1", "identifier not found: b"},
+		{"let i = 4; i += 2; i", 6},
+		{"let i = 4; i -= 2; i", 2},
+		{"let i = 4; i *= 2; i", 8},
+		{"let i = 4; i /= 2; i", 2},
 	}
 
 	for _, tt := range tests {

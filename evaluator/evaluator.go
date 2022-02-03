@@ -104,13 +104,19 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	case *ast.HashLiteral:
 		return evalHashLiteral(node, env)
 	case *ast.AssignmentStatement:
-		val := Eval(node.Value, env)
+		var val object.Object
+		if node.Operator == "=" {
+			val = Eval(node.Value, env)
+		} else {
+			val = Eval(node.Assignment, env)
+		}
+
 		if isError(val) {
 			return val
 		}
 
 		if _, ok := env.Get(node.Name.Value); !ok {
-			return newError("identifier '%s' not found", node.Name.Value)
+			return newError("identifier not found: %s", node.Name.Value)
 		}
 
 		env.Set(node.Name.Value, val)

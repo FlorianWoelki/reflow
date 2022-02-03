@@ -28,7 +28,7 @@ func TestAssignmentExpression(t *testing.T) {
 		input              string
 		expectedIdentifier string
 		expectedOperator   string
-		expectedValue      string
+		expectedValue      interface{}
 	}{
 		{"x = 5", "x", "=", "5"},
 		{"x = x + 5", "x", "=", "(x + 5)"},
@@ -49,17 +49,18 @@ func TestAssignmentExpression(t *testing.T) {
 		}
 
 		stmt := program.Statements[0]
-		if !testAssignmentStatement(t, stmt, tt.expectedIdentifier) {
-			return
-		}
+		if stmt, ok := stmt.(*ast.AssignmentStatement); ok {
+			if !testAssignmentStatement(t, stmt, tt.expectedIdentifier) {
+				return
+			}
 
-		assignmentStmt := stmt.(*ast.AssignmentStatement)
-		if assignmentStmt.Value.String() != tt.expectedValue {
-			t.Errorf("assignmentStmt.Value.String() is not the expected value. expected=%s, got=%s", tt.expectedValue, assignmentStmt.Value.String())
-		}
+			if stmt.Operator != tt.expectedOperator {
+				t.Errorf("stmt.Operator is not the expected value. expected=%s, got=%s", tt.expectedOperator, stmt.Operator)
+			}
 
-		if assignmentStmt.Operator != tt.expectedOperator {
-			t.Errorf("assignmentStmt.Operator is not the expected value. expected=%s, got=%s", tt.expectedOperator, assignmentStmt.Operator)
+			if stmt.Value.String() != tt.expectedValue {
+				t.Errorf("stmt.Value.String() is not the expected value. expected=%s, got=%s", tt.expectedValue, stmt.Value.String())
+			}
 		}
 	}
 }
