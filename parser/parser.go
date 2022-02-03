@@ -87,7 +87,7 @@ func New(l *lexer.Lexer) *Parser {
 	return p
 }
 
-func (p *Parser) parseIdentAssignment() ast.Statement {
+func (p *Parser) parseIdentAssignment(operator token.TokenType) ast.Statement {
 	if p.curToken.Type != token.IDENT {
 		return nil
 	}
@@ -95,8 +95,8 @@ func (p *Parser) parseIdentAssignment() ast.Statement {
 	stmt := &ast.AssignmentStatement{}
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
-	if !p.expectPeek(token.ASSIGN) {
-		p.peekError(token.ASSIGN)
+	if !p.expectPeek(operator) {
+		p.peekError(operator)
 		return nil
 	}
 
@@ -429,8 +429,10 @@ func (p *Parser) ParseProgram() *ast.Program {
 }
 
 func (p *Parser) parseStatement() ast.Statement {
-	if p.curToken.Type == token.IDENT && p.peekToken.Type == token.ASSIGN {
-		return p.parseIdentAssignment()
+	if p.curToken.Type == token.IDENT {
+		if p.peekToken.Type == token.PLUS_ASSIGN || p.peekToken.Type == token.MINUS_ASSIGN || p.peekToken.Type == token.ASTERISK_ASSIGN || p.peekToken.Type == token.SLASH_ASSIGN || p.peekToken.Type == token.ASSIGN {
+			return p.parseIdentAssignment(p.peekToken.Type)
+		}
 	}
 
 	switch p.curToken.Type {
