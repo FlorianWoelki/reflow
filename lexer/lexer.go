@@ -1,12 +1,12 @@
 package lexer
 
-import "github.com/florianwoelki/reflow/token"
+import "github.com/florianwoelki/reflow/lexer/token"
 
 type Lexer struct {
 	input        string
-	position     int
-	readPosition int
-	ch           byte
+	position     int  // Current position in input (points to current character).
+	readPosition int  // Current reading position in input (after current character).
+	ch           byte // Current character under examination.
 }
 
 func New(input string) *Lexer {
@@ -29,6 +29,7 @@ func (l *Lexer) readChar() {
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
+	// Skip possible white spaces between tokens.
 	l.skipWhitespace()
 
 	switch l.ch {

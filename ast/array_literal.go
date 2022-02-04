@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/florianwoelki/reflow/token"
+	"github.com/florianwoelki/reflow/lexer/token"
 )
 
 type ArrayLiteral struct {

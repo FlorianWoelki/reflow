@@ -3,14 +3,14 @@ package lexer
 import (
 	"testing"
 
-	"github.com/florianwoelki/reflow/token"
+	"github.com/florianwoelki/reflow/lexer/token"
 )
 
 func TestNextToken(t *testing.T) {
 	input := `let five = 5;
 let ten = 10;
 
-let add = fn(x: int, y: int) {
+let add = fn(x, y) {
   x + y;
 };
 
@@ -58,12 +58,8 @@ if 5 < 10 {
 		{token.FUNCTION, "fn"},
 		{token.LPAREN, "("},
 		{token.IDENT, "x"},
-		{token.COLON, ":"},
-		{token.INT_TYPE, "int"},
 		{token.COMMA, ","},
 		{token.IDENT, "y"},
-		{token.COLON, ":"},
-		{token.INT_TYPE, "int"},
 		{token.RPAREN, ")"},
 		{token.LBRACE, "{"},
 		{token.IDENT, "x"},

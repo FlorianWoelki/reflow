@@ -3,7 +3,7 @@ package ast
 import (
 	"testing"
 
-	"github.com/florianwoelki/reflow/token"
+	"github.com/florianwoelki/reflow/lexer/token"
 )
 
 func TestString(t *testing.T) {

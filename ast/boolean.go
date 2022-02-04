@@ -1,6 +1,6 @@
 package ast
 
-import "github.com/florianwoelki/reflow/token"
+import "github.com/florianwoelki/reflow/lexer/token"
 
 type Boolean struct {
 	Token token.Token

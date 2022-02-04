@@ -3,7 +3,7 @@ package ast
 import (
 	"bytes"
 
-	"github.com/florianwoelki/reflow/token"
+	"github.com/florianwoelki/reflow/lexer/token"
 )
 
 type ReturnStatement struct {

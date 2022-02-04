@@ -6,7 +6,7 @@ import (
 
 	"github.com/florianwoelki/reflow/ast"
 	"github.com/florianwoelki/reflow/lexer"
-	"github.com/florianwoelki/reflow/token"
+	"github.com/florianwoelki/reflow/lexer/token"
 )
 
 const (

@@ -1,6 +1,6 @@
 package ast
 
-import "github.com/florianwoelki/reflow/token"
+import "github.com/florianwoelki/reflow/lexer/token"
 
 type StringLiteral struct {
 	Token token.Token
