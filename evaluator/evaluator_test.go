@@ -21,6 +21,8 @@ func TestAssignmentStatement(t *testing.T) {
 		{"let i = 4; i -= 2; i", 2},
 		{"let i = 4; i *= 2; i", 8},
 		{"let i = 4; i /= 2; i", 2},
+		{"let i = 4; let b = 10; i += b * 2; i", 24},
+		{"let i = 4; let b = 10; i += b / 2; i", 9},
 	}
 
 	for _, tt := range tests {
@@ -46,6 +48,7 @@ func TestWhileExpressions(t *testing.T) {
 	}{
 		{"let i = 0; while (i > 5) { i = i + 1; }; i", 0},
 		{"let i = 0; while (i < 5) { i = i + 1; }; i", 5},
+		{"let i = 0; while (i < 5) { i += 1; }; i", 5},
 	}
 
 	for _, tt := range tests {
