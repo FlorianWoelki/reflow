@@ -40,6 +40,26 @@ func builtinStr(args ...object.Object) object.Object {
 	return &object.String{Value: args[0].Inspect()}
 }
 
+func builtinDelete(args ...object.Object) object.Object {
+	if len(args) != 2 {
+		return newError("wrong number of arguments. got=%d, expected=2", len(args))
+	}
+	if args[0].Type() != object.HASH_OBJ {
+		return newError("first argument to `delete` should be a hash")
+	}
+
+	hash := args[0].(*object.Hash)
+	k := args[1].(object.Hashable)
+	_, ok := hash.Pairs[k.HashKey()]
+	if !ok {
+		return newError("hash key `%d` not found", k.HashKey().Value)
+	}
+
+	delete(hash.Pairs, k.HashKey())
+
+	return NULL
+}
+
 var builtins = map[string]*object.Builtin{
 	"len":    {Fn: builtinLen},
 	"print":  {Fn: builtinPrint},
@@ -52,4 +72,5 @@ var builtins = map[string]*object.Builtin{
 	"map":    {Fn: builtinMap},
 	"find":   {Fn: builtinFind},
 	"filter": {Fn: builtinFilter},
+	"delete": {Fn: builtinDelete},
 }

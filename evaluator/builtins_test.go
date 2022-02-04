@@ -3,8 +3,75 @@ package evaluator
 import (
 	"testing"
 
+	"github.com/florianwoelki/reflow/lexer"
 	"github.com/florianwoelki/reflow/object"
+	"github.com/florianwoelki/reflow/parser"
 )
+
+func TestBuiltinDelete(t *testing.T) {
+	tests := []builtinTest{
+		{
+			input:           "delete()",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "delete([], 1)",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "delete({})",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+		{
+			input:           "let a = {\"key1\": 123, \"key2\": 999}; delete(a, \"key1\")",
+			expected:        "null",
+			expectedObjType: object.NULL_OBJ,
+		},
+		{
+			input:           "let a = {\"key1\": 123, \"key2\": 999}; delete(a, \"key2\")",
+			expected:        "null",
+			expectedObjType: object.NULL_OBJ,
+		},
+		{
+			input:           "delete({\"key1\": 123, \"key2\": 999}, 123)",
+			expected:        "",
+			expectedObjType: object.ERROR_OBJ,
+		},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := parser.New(l)
+		program := p.ParseProgram()
+		env := object.NewEnvironment()
+
+		output := Eval(program, env)
+		if output.Type() != tt.expectedObjType {
+			t.Errorf("builtin %s function test returned not the expected object type. expected=%s, got=%s", "delete", tt.expectedObjType, output.Type())
+		}
+
+		if output.Type() == object.ERROR_OBJ {
+			continue
+		}
+
+		if output.Inspect() != tt.expected {
+			t.Errorf("builtin %s function test returned not the correct value. expected=%s, got=%s", "delete", tt.expected, output.Inspect())
+		}
+
+		m, ok := env.Get("a")
+		if !ok {
+			t.Errorf("builtin %s function did not found hash declaration", "delete")
+		}
+
+		hash := m.(*object.Hash)
+		if len(hash.Pairs) != 1 {
+			t.Errorf("builtin %s function did not return the correct length. expected%d, got=%d", "delete", 1, len(hash.Pairs))
+		}
+	}
+}
 
 func TestBuiltinFilter(t *testing.T) {
 	tests := []builtinTest{
@@ -298,7 +365,7 @@ func TestBuiltinMap(t *testing.T) {
 }
 
 func TestBuiltinsLength(t *testing.T) {
-	expectedFunctions := []string{"len", "print", "str", "first", "last", "rest", "pop", "push", "map", "find", "filter"}
+	expectedFunctions := []string{"len", "print", "str", "first", "last", "rest", "pop", "push", "map", "find", "filter", "delete"}
 
 	if len(builtins) != len(expectedFunctions) {
 		t.Errorf("length of expected functions is not the same as builtins. expected=%d, got=%d", len(builtins), len(expectedFunctions))
