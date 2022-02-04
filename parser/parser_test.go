@@ -207,6 +207,33 @@ func TestParsingHashLiteralsStringKeys(t *testing.T) {
 	}
 }
 
+func TestParsingIndexAssignment(t *testing.T) {
+	input := "myArray[0] = 1"
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	stmt, _ := program.Statements[0].(*ast.ExpressionStatement)
+	indexExp, ok := stmt.Expression.(*ast.IndexExpression)
+	if !ok {
+		t.Fatalf("exp not *ast.IndexExpression. got=%T", stmt.Expression)
+	}
+
+	if !testIdentifier(t, indexExp.Left, "myArray") {
+		return
+	}
+
+	if indexExp.Index.String() != "0" {
+		t.Errorf("indexExp index not the correct value. expected=%s, got=%s", "0", indexExp.Index.String())
+	}
+
+	if indexExp.Assignment.String() != "1" {
+		t.Errorf("indexExp assignment not the correct value. expected=%s, got=%s", "1", indexExp.Assignment.String())
+	}
+}
+
 func TestParsingIndexExpressions(t *testing.T) {
 	input := "myArray[1 + 1]"
 

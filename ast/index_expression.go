@@ -7,9 +7,10 @@ import (
 )
 
 type IndexExpression struct {
-	Token token.Token
-	Left  Expression
-	Index Expression
+	Token      token.Token
+	Left       Expression
+	Index      Expression
+	Assignment Expression
 }
 
 func (ie *IndexExpression) expressionNode() {}
@@ -26,6 +27,11 @@ func (ie *IndexExpression) String() string {
 	out.WriteString("[")
 	out.WriteString(ie.Index.String())
 	out.WriteString("])")
+
+	if ie.Assignment != nil {
+		out.WriteString(" = ")
+		out.WriteString(ie.Assignment.String())
+	}
 
 	return out.String()
 }

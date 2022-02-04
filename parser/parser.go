@@ -171,6 +171,11 @@ func (p *Parser) parseIndexExpression(left ast.Expression) ast.Expression {
 		return nil
 	}
 
+	if p.expectPeek(token.ASSIGN) {
+		p.nextToken()
+		exp.Assignment = p.parseExpression(LOWEST)
+	}
+
 	return exp
 }
 
