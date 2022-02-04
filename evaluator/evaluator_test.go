@@ -15,11 +15,15 @@ func TestArrayIndexAssignmentStatement(t *testing.T) {
 	}{
 		{
 			"let a = []; a[0] = 1; a[0]",
-			NULL,
+			"index out of range (array size: `0`)",
 		},
 		{
 			"let a = [99]; a[0] = 1; a[0]",
 			1,
+		},
+		{
+			"let a = [99, 3, 4]; a[1] = 1000; a[1]",
+			1000,
 		},
 	}
 
@@ -34,6 +38,8 @@ func TestArrayIndexAssignmentStatement(t *testing.T) {
 				if errObj.Message != tt.expected {
 					t.Errorf("wrong error message. expected=%q, got=%q", tt.expected, errObj.Message)
 				}
+			} else {
+				testNullObject(t, evaluated)
 			}
 		}
 	}
@@ -206,11 +212,11 @@ func TestArrayIndexExpressions(t *testing.T) {
 		},
 		{
 			"[1, 2, 3][3]",
-			nil,
+			"index out of range (array size: `3`)",
 		},
 		{
 			"[1, 2, 3][-1]",
-			nil,
+			"index out of range (array size: `3`)",
 		},
 	}
 
@@ -220,7 +226,14 @@ func TestArrayIndexExpressions(t *testing.T) {
 		if ok {
 			testIntegerObject(t, evaluated, int64(integer))
 		} else {
-			testNullObject(t, evaluated)
+			errObj, ok := evaluated.(*object.Error)
+			if ok {
+				if errObj.Message != tt.expected {
+					t.Errorf("wrong error message. expected=%q, got=%q", tt.expected, errObj.Message)
+				}
+			} else {
+				testNullObject(t, evaluated)
+			}
 		}
 	}
 }

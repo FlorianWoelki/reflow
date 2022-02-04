@@ -207,7 +207,7 @@ func evalArrayIndexExpression(array, index, assignment object.Object) object.Obj
 	max := int64(len(arrayObject.Elements) - 1)
 
 	if idx < 0 || idx > max {
-		return NULL
+		return newError("index out of range (array size: `%d`)", max+1)
 	}
 
 	if assignment != nil {
