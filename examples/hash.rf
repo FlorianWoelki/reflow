@@ -1,0 +1,7 @@
+let a = { "key1": 999, "key2": 333 }
+
+print(a["key1"])
+print(a["key2"])
+
+delete(a, "key1")
+print(a)
