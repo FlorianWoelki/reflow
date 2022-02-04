@@ -11,19 +11,19 @@ type Node interface {
 
 type Statement interface {
 	Node
-	statementNode()
+	statementNode() // Not used in production. Only used for not confusing the Go compiler.
 }
 
 type Expression interface {
 	Node
-	expressionNode()
+	expressionNode() // Not used in production. Only used for not confusing the Go compiler.
 }
 
 type Program struct {
 	Statements []Statement
 }
 
-func (p *Program) String() string {
+func (p Program) String() string {
 	var out bytes.Buffer
 
 	for _, s := range p.Statements {
@@ -33,7 +33,7 @@ func (p *Program) String() string {
 	return out.String()
 }
 
-func (p *Program) TokenLiteral() string {
+func (p Program) TokenLiteral() string {
 	if len(p.Statements) > 0 {
 		return p.Statements[0].TokenLiteral()
 	}
