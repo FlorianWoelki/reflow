@@ -8,6 +8,37 @@ import (
 	"github.com/florianwoelki/reflow/parser"
 )
 
+func TestArrayIndexAssignmentStatement(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{
+			"let a = []; a[0] = 1; a[0]",
+			NULL,
+		},
+		{
+			"let a = [99]; a[0] = 1; a[0]",
+			1,
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		integer, ok := tt.expected.(int)
+		if ok {
+			testIntegerObject(t, evaluated, int64(integer))
+		} else {
+			errObj, ok := evaluated.(*object.Error)
+			if ok {
+				if errObj.Message != tt.expected {
+					t.Errorf("wrong error message. expected=%q, got=%q", tt.expected, errObj.Message)
+				}
+			}
+		}
+	}
+}
+
 func TestAssignmentStatement(t *testing.T) {
 	tests := []struct {
 		input    string

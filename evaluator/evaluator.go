@@ -90,6 +90,11 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 		return &object.Array{Elements: elements}
 	case *ast.IndexExpression:
+		assignment := Eval(node.Assignment, env)
+		if isError(assignment) {
+			return assignment
+		}
+
 		left := Eval(node.Left, env)
 		if isError(left) {
 			return left
@@ -100,7 +105,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 			return index
 		}
 
-		return evalIndexExpression(left, index)
+		return evalIndexExpression(left, index, assignment)
 	case *ast.HashLiteral:
 		return evalHashLiteral(node, env)
 	case *ast.AssignmentStatement:
@@ -169,10 +174,10 @@ func evalHashLiteral(node *ast.HashLiteral, env *object.Environment) object.Obje
 	return &object.Hash{Pairs: pairs}
 }
 
-func evalIndexExpression(left, index object.Object) object.Object {
+func evalIndexExpression(left, index, assignment object.Object) object.Object {
 	switch {
 	case left.Type() == object.ARRAY_OBJ && index.Type() == object.INTEGER_OBJ:
-		return evalArrayIndexExpression(left, index)
+		return evalArrayIndexExpression(left, index, assignment)
 	case left.Type() == object.HASH_OBJ:
 		return evalHashIndexExpression(left, index)
 	default:
@@ -196,12 +201,17 @@ func evalHashIndexExpression(hash, index object.Object) object.Object {
 	return pair.Value
 }
 
-func evalArrayIndexExpression(array, index object.Object) object.Object {
+func evalArrayIndexExpression(array, index, assignment object.Object) object.Object {
 	arrayObject := array.(*object.Array)
 	idx := index.(*object.Integer).Value
 	max := int64(len(arrayObject.Elements) - 1)
 
 	if idx < 0 || idx > max {
+		return NULL
+	}
+
+	if assignment != nil {
+		arrayObject.Elements[idx] = assignment
 		return NULL
 	}
 
