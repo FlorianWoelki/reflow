@@ -27,6 +27,8 @@ const (
 	MINUS_ASSIGN    = "-="
 	ASTERISK_ASSIGN = "*="
 	SLASH_ASSIGN    = "/="
+	INCREMENT       = "++"
+	DECREMENT       = "--"
 
 	// Delimiters
 	COMMA     = ","

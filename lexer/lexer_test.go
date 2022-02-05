@@ -34,6 +34,8 @@ if 5 < 10 {
 1 -= 1
 1 *= 1
 1 /= 1
+1++
+1--
 `
 
 	tests := []struct {
@@ -151,6 +153,12 @@ if 5 < 10 {
 		{token.INT, "1"},
 		{token.SLASH_ASSIGN, "/="},
 		{token.INT, "1"},
+
+		{token.INT, "1"},
+		{token.INCREMENT, "++"},
+
+		{token.INT, "1"},
+		{token.DECREMENT, "--"},
 
 		{token.EOF, ""},
 	}
