@@ -8,6 +8,54 @@ import (
 	"github.com/florianwoelki/reflow/lexer"
 )
 
+func TestParsingPostfixExpressions(t *testing.T) {
+	postfixTests := []struct {
+		input     string
+		leftValue interface{}
+		operator  string
+	}{
+		{"a++", "a", "++"},
+		{"a--", "a", "--"},
+	}
+
+	for _, tt := range postfixTests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParserErrors(t, p)
+
+		if len(program.Statements) != 1 {
+			t.Fatalf("program.Statements does not contain %d statements. got=%d\n", 1, len(program.Statements))
+		}
+
+		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+		if !ok {
+			t.Fatalf("program.Statemets[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
+		}
+
+		testPostfixExpression(t, stmt.Expression, tt.leftValue, tt.operator)
+	}
+}
+
+func testPostfixExpression(t *testing.T, exp ast.Expression, left interface{}, operator string) bool {
+	opExp, ok := exp.(*ast.PostfixExpression)
+	if !ok {
+		t.Errorf("exp is not ast.PostfixExpression. got=%T(%s)", exp, exp)
+		return false
+	}
+
+	if !testLiteralExpression(t, opExp.Name, left) {
+		return false
+	}
+
+	if opExp.Operator != operator {
+		t.Errorf("exp.Operator is not '%s'. got=%q", operator, opExp.Operator)
+		return false
+	}
+
+	return true
+}
+
 func testAssignmentStatement(t *testing.T, s ast.Statement, name string) bool {
 	assignmentStmt, ok := s.(*ast.AssignmentStatement)
 	if !ok {
@@ -537,6 +585,14 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		{
 			"add(a * b[2], b[1], 2 * [1, 2][1])",
 			"add((a * (b[2])), (b[1]), (2 * ([1, 2][1])))",
+		},
+		{
+			"1 + a++",
+			"(1 + (a++))",
+		},
+		{
+			"1 + a--",
+			"(1 + (a--))",
 		},
 	}
 

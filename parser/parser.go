@@ -18,7 +18,7 @@ const (
 	PRODUCT     // *
 	PREFIX      // -x, !x
 	CALL        // x()
-	INDEX
+	INDEX       // a[0]
 )
 
 var precedences = map[token.TokenType]int{
@@ -35,8 +35,9 @@ var precedences = map[token.TokenType]int{
 }
 
 type (
-	prefixParseFn func() ast.Expression
-	infixParseFn  func(ast.Expression) ast.Expression
+	prefixParseFn  func() ast.Expression
+	infixParseFn   func(ast.Expression) ast.Expression
+	postfixParseFn func(ast.Expression) ast.Expression
 )
 
 type Parser struct {
@@ -46,8 +47,9 @@ type Parser struct {
 	curToken  token.Token
 	peekToken token.Token
 
-	prefixParseFns map[token.TokenType]prefixParseFn
-	infixParseFns  map[token.TokenType]infixParseFn
+	prefixParseFns  map[token.TokenType]prefixParseFn
+	infixParseFns   map[token.TokenType]infixParseFn
+	postfixParseFns map[token.TokenType]postfixParseFn
 }
 
 func New(l *lexer.Lexer) *Parser {
@@ -80,11 +82,19 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
 	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
 
+	p.postfixParseFns = make(map[token.TokenType]postfixParseFn)
+	p.registerPostfix(token.INCREMENT, p.parsePostfixExpression)
+	p.registerPostfix(token.DECREMENT, p.parsePostfixExpression)
+
 	// Read two tokens for `curToken` and `peekToken`.
 	p.nextToken()
 	p.nextToken()
 
 	return p
+}
+
+func (p *Parser) parsePostfixExpression(left ast.Expression) ast.Expression {
+	return &ast.PostfixExpression{Token: p.curToken, Operator: p.curToken.Literal, Name: left}
 }
 
 func (p *Parser) parseIdentAssignment(operator token.TokenType) ast.Statement {
@@ -395,6 +405,10 @@ func (p *Parser) parseIdentifier() ast.Expression {
 	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 }
 
+func (p *Parser) registerPostfix(tokenType token.TokenType, fn postfixParseFn) {
+	p.postfixParseFns[tokenType] = fn
+}
+
 func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {
 	p.prefixParseFns[tokenType] = fn
 }
@@ -460,6 +474,19 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 }
 
 func (p *Parser) parseExpression(precedence int) ast.Expression {
+	postfix := p.postfixParseFns[p.peekToken.Type]
+	if postfix != nil {
+		prefix := p.prefixParseFns[p.curToken.Type]
+		if prefix == nil {
+			p.noPrefixParseFnError(p.curToken.Type)
+			return nil
+		}
+
+		leftExp := prefix()
+		p.nextToken()
+		return postfix(leftExp)
+	}
+
 	prefix := p.prefixParseFns[p.curToken.Type]
 	if prefix == nil {
 		p.noPrefixParseFnError(p.curToken.Type)
