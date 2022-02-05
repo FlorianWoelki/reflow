@@ -125,9 +125,40 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		}
 
 		env.Set(node.Name.Value, val)
+	case *ast.PostfixExpression:
+		left := Eval(node.Name, env)
+		if isError(left) {
+			return left
+		}
+
+		val := evalPostfixExpression(node.Operator, left)
+		if isError(val) {
+			return val
+		}
+
+		ident, ok := node.Name.(*ast.Identifier)
+		if !ok {
+			return newError("not an identifier: %s", node.Name)
+		}
+
+		env.Set(ident.Value, val)
+		return val
 	}
 
 	return nil
+}
+
+func evalPostfixExpression(operator string, left object.Object) object.Object {
+	switch {
+	case left.Type() == object.INTEGER_OBJ && operator == "++":
+		leftVal := left.(*object.Integer).Value
+		return &object.Integer{Value: leftVal + 1}
+	case left.Type() == object.INTEGER_OBJ && operator == "--":
+		leftVal := left.(*object.Integer).Value
+		return &object.Integer{Value: leftVal - 1}
+	default:
+		return newError("unknown operator: %s%s ", left.Type(), operator)
+	}
 }
 
 func evalWhileExpression(we *ast.WhileExpression, env *object.Environment) object.Object {

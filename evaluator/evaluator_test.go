@@ -8,6 +8,43 @@ import (
 	"github.com/florianwoelki/reflow/parser"
 )
 
+func TestPostfixExpressions(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{
+			"let a = 0; a++; a",
+			1,
+		},
+		{
+			"let a = 0; a--; a",
+			-1,
+		},
+		{
+			"let a = 0; a = 1 + a++; a",
+			2,
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		integer, ok := tt.expected.(int)
+		if ok {
+			testIntegerObject(t, evaluated, int64(integer))
+		} else {
+			errObj, ok := evaluated.(*object.Error)
+			if ok {
+				if errObj.Message != tt.expected {
+					t.Errorf("wrong error message. expected=%q, got=%q", tt.expected, errObj.Message)
+				}
+			} else {
+				testNullObject(t, evaluated)
+			}
+		}
+	}
+}
+
 func TestArrayIndexAssignmentStatement(t *testing.T) {
 	tests := []struct {
 		input    string
