@@ -32,15 +32,15 @@ Call Expressions:
 
 Array Statements:
 
-`[<element1>, <element2>]`
+`[<comma separated expressions>]`
 
-`<identifier>[<index>]`
+`<expression>[<expression>]`
 
 Hash Statements:
 
-`{<key1>: <value1>, <key2>: <value2>}`
+`{<hashable>: <expression>}`
 
-`<identifier>[<key>]`
+`<expression>[<expression>]`
 
 Strings:
 
