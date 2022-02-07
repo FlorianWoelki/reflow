@@ -7,12 +7,16 @@ import (
 	"github.com/florianwoelki/reflow/object"
 )
 
+// Defines constant object values.
 var (
 	NULL  = &object.Null{}
 	TRUE  = &object.Boolean{Value: true}
 	FALSE = &object.Boolean{Value: false}
 )
 
+// Eval tries to evaluate a ast node that is passed to this function.
+// In addition, it does have an internal environment which stores all variables and state.
+// This function returns an object of the evaluation.
 func Eval(node ast.Node, env *object.Environment) object.Object {
 	switch node := node.(type) {
 	case *ast.Program:
@@ -477,6 +481,9 @@ func nativeBoolToBooleanObject(input bool) *object.Boolean {
 	return FALSE
 }
 
+// evalProgram is the start of the evaluation tree.
+// It loops through the statements of the program and evaluates it.
+// This function handles return values and errors.
 func evalProgram(program *ast.Program, env *object.Environment) object.Object {
 	var result object.Object
 

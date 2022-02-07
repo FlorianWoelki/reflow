@@ -2,6 +2,7 @@ package object
 
 type ObjectType string
 
+// Defines all the different object types.
 const (
 	INTEGER_OBJ      = "INTEGER"
 	BOOLEAN_OBJ      = "BOOLEAN"
@@ -15,6 +16,7 @@ const (
 	HASH_OBJ         = "HASH"
 )
 
+// Object is an interface and represents every value the interpreter encounters.
 type Object interface {
 	Type() ObjectType
 	Inspect() string
