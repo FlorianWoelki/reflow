@@ -41,3 +41,7 @@ Hash Statements:
 `{<key1>: <value1>, <key2>: <value2>}`
 
 `<identifier>[<key>]`
+
+Strings:
+
+`"<sequence of characters>"`
