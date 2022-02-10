@@ -30,6 +30,8 @@ const (
 	SLASH_ASSIGN    = "/="
 	INCREMENT       = "++"
 	DECREMENT       = "--"
+	CONJUNCTION     = "&&"
+	DISJUNCTION     = "||"
 
 	// Delimiters
 	COMMA     = ","

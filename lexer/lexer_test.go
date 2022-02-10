@@ -37,6 +37,8 @@ if 5 < 10 {
 1++
 1--
 1 % 1
+1 && 1
+1 || 1
 `
 
 	tests := []struct {
@@ -163,6 +165,14 @@ if 5 < 10 {
 
 		{token.INT, "1"},
 		{token.PERCENT, "%"},
+		{token.INT, "1"},
+
+		{token.INT, "1"},
+		{token.CONJUNCTION, "&&"},
+		{token.INT, "1"},
+
+		{token.INT, "1"},
+		{token.DISJUNCTION, "||"},
 		{token.INT, "1"},
 
 		{token.EOF, ""},
