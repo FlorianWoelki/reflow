@@ -389,10 +389,20 @@ func evalInfixExpression(operator string, left, right object.Object) object.Obje
 	switch {
 	case left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ:
 		return evalIntegerInfixExpression(operator, left, right)
-	case operator == "==":
-		return nativeBoolToBooleanObject(left == right)
-	case operator == "!=":
-		return nativeBoolToBooleanObject(left != right)
+	case left.Type() == object.BOOLEAN_OBJ && right.Type() == object.BOOLEAN_OBJ:
+		leftVal := left.(*object.Boolean)
+		rightVal := right.(*object.Boolean)
+		if operator == "&&" {
+			return nativeBoolToBooleanObject(leftVal.Value && rightVal.Value)
+		} else if operator == "||" {
+			return nativeBoolToBooleanObject(leftVal.Value || rightVal.Value)
+		} else if operator == "==" {
+			return nativeBoolToBooleanObject(left == right)
+		} else if operator == "!=" {
+			return nativeBoolToBooleanObject(left != right)
+		} else {
+			return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+		}
 	case left.Type() != right.Type():
 		return newError("type mismatch: %s %s %s", left.Type(), operator, right.Type())
 	case left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ:
