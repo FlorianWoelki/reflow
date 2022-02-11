@@ -12,9 +12,9 @@ import (
 const (
 	_ int = iota
 	LOWEST
-	EQUALS      // ==
 	OR          // ||
 	AND         // &&
+	EQUALS      // ==
 	LESSGREATER // <, >
 	SUM         // +
 	PRODUCT     // *, /
