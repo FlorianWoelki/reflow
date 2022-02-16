@@ -7,12 +7,16 @@ import (
 
 type Instructions []byte
 
+// Defines the operator part of an instruction (e.g. for mnemonics PUSH, POP).
 type Opcode byte
 
 const (
-	OpConstant Opcode = iota
+	OpConstant Opcode = iota // Pushes one integer parameter onto the stack.
 )
 
+// Definition for an Opcode (just for debugging purposes).
+// `Name` helps to make an Opcode more readable and `OperandWidths` contains the number
+// of bytes each operand takes up.
 type Definition struct {
 	Name          string
 	OperandWidths []int
@@ -40,7 +44,7 @@ func Make(op Opcode, operands ...int) []byte {
 	for i, o := range operands {
 		width := def.OperandWidths[i]
 		switch width {
-		case 2:
+		case 2: // Two byte operand
 			binary.BigEndian.PutUint16(instruction[offset:], uint16(o))
 		}
 		offset += width

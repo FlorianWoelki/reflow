@@ -6,7 +6,7 @@ func TestMake(t *testing.T) {
 	tests := []struct {
 		op       Opcode
 		operands []int
-		expected []byte
+		expected []byte // 1: the opcode, 2, 3: big-endian encoding of the operands.
 	}{
 		{OpConstant, []int{65534}, []byte{byte(OpConstant), 255, 254}},
 	}
