@@ -52,6 +52,7 @@ type Opcode byte
 const (
 	OpConstant Opcode = iota // Pushes one integer parameter onto the stack.
 	OpAdd
+	OpPop
 )
 
 // Definition for an Opcode (just for debugging purposes).
@@ -65,6 +66,7 @@ type Definition struct {
 var definitions = map[Opcode]*Definition{
 	OpConstant: {"OpConstant", []int{2}},
 	OpAdd:      {"OpAdd", []int{}},
+	OpPop:      {"OpPop", []int{}},
 }
 
 func Make(op Opcode, operands ...int) []byte {
