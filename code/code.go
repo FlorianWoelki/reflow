@@ -53,6 +53,10 @@ const (
 	OpConstant Opcode = iota // Pushes one integer parameter onto the stack.
 	OpAdd
 	OpPop
+
+	OpSub
+	OpMul
+	OpDiv
 )
 
 // Definition for an Opcode (just for debugging purposes).
@@ -67,6 +71,9 @@ var definitions = map[Opcode]*Definition{
 	OpConstant: {"OpConstant", []int{2}},
 	OpAdd:      {"OpAdd", []int{}},
 	OpPop:      {"OpPop", []int{}},
+	OpSub:      {"OpSub", []int{}},
+	OpMul:      {"OpMul", []int{}},
+	OpDiv:      {"OpDiv", []int{}},
 }
 
 func Make(op Opcode, operands ...int) []byte {
