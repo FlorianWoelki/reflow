@@ -57,6 +57,9 @@ const (
 	OpSub
 	OpMul
 	OpDiv
+
+	OpTrue
+	OpFalse
 )
 
 // Definition for an Opcode (just for debugging purposes).
@@ -74,6 +77,8 @@ var definitions = map[Opcode]*Definition{
 	OpSub:      {"OpSub", []int{}},
 	OpMul:      {"OpMul", []int{}},
 	OpDiv:      {"OpDiv", []int{}},
+	OpTrue:     {"OpTrue", []int{}},
+	OpFalse:    {"OpFalse", []int{}},
 }
 
 func Make(op Opcode, operands ...int) []byte {
