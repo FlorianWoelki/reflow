@@ -63,6 +63,9 @@ const (
 	OpEqual
 	OpNotEqual
 	OpGreaterThan
+
+	OpMinus
+	OpBang
 )
 
 // Definition for an Opcode (just for debugging purposes).
@@ -85,6 +88,8 @@ var definitions = map[Opcode]*Definition{
 	OpEqual:       {"OpEqual", []int{}},
 	OpNotEqual:    {"OpNotEqual", []int{}},
 	OpGreaterThan: {"OpGreaterThan", []int{}},
+	OpMinus:       {"OpMinus", []int{}},
+	OpBang:        {"OpBang", []int{}},
 }
 
 func Make(op Opcode, operands ...int) []byte {
