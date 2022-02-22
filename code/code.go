@@ -69,6 +69,8 @@ const (
 
 	OpJumpNotTruthy
 	OpJump
+
+	OpNull
 )
 
 // Definition for an Opcode (just for debugging purposes).
@@ -95,6 +97,7 @@ var definitions = map[Opcode]*Definition{
 	OpBang:          {"OpBang", []int{}},
 	OpJumpNotTruthy: {"OpJumpNotTruthy", []int{2}},
 	OpJump:          {"OpJump", []int{2}},
+	OpNull:          {"OpNull", []int{}},
 }
 
 func Make(op Opcode, operands ...int) []byte {
