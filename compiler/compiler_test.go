@@ -17,6 +17,31 @@ type compilerTestCase struct {
 	expectedInstructions []code.Instructions
 }
 
+func TestStringExpressions(t *testing.T) {
+	tests := []compilerTestCase{
+		{
+			input:             `"reflow"`,
+			expectedConstants: []interface{}{"reflow"},
+			expectedInstructions: []code.Instructions{
+				code.Make(code.OpConstant, 0),
+				code.Make(code.OpPop),
+			},
+		},
+		{
+			input:             `"re" + "flow"`,
+			expectedConstants: []interface{}{"re", "flow"},
+			expectedInstructions: []code.Instructions{
+				code.Make(code.OpConstant, 0),
+				code.Make(code.OpConstant, 1),
+				code.Make(code.OpAdd),
+				code.Make(code.OpPop),
+			},
+		},
+	}
+
+	runCompilerTests(t, tests)
+}
+
 func TestGlobalLetStatement(t *testing.T) {
 	tests := []compilerTestCase{
 		{
@@ -323,7 +348,25 @@ func testConstants(t *testing.T, expected []interface{}, actual []object.Object)
 			if err != nil {
 				return fmt.Errorf("constant %d - testIntegerObject failed: %s", i, err)
 			}
+		case string:
+			err := testStringObject(constant, actual[i])
+			if err != nil {
+				return fmt.Errorf("constant %d - testStringObject failed: %s", i, err)
+			}
 		}
+	}
+
+	return nil
+}
+
+func testStringObject(expected string, actual object.Object) error {
+	result, ok := actual.(*object.String)
+	if !ok {
+		return fmt.Errorf("object is not String. got=%T (%+v)", actual, actual)
+	}
+
+	if result.Value != expected {
+		return fmt.Errorf("object has wrong value. expected=%q, got=%q", expected, result.Value)
 	}
 
 	return nil
