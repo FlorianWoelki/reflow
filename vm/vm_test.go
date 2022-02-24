@@ -16,6 +16,16 @@ type vmTestCase struct {
 	expected interface{}
 }
 
+func TestStringExpressions(t *testing.T) {
+	tests := []vmTestCase{
+		{`"reflow"`, "reflow"},
+		{`"re" + "flow"`, "reflow"},
+		{`"re" + "flow" + "flow"`, "reflowflow"},
+	}
+
+	runVmTests(t, tests)
+}
+
 func TestGlobalLetStatement(t *testing.T) {
 	tests := []vmTestCase{
 		{"let one = 1; one", 1},
@@ -137,7 +147,25 @@ func testExpectedObject(t *testing.T, expected interface{}, actual object.Object
 		if actual != Null {
 			t.Errorf("object is not Null: %T (%+v)", actual, actual)
 		}
+	case string:
+		err := testStringObject(expected, actual)
+		if err != nil {
+			t.Errorf("testStringObject failed: %s", err)
+		}
 	}
+}
+
+func testStringObject(expected string, actual object.Object) error {
+	result, ok := actual.(*object.String)
+	if !ok {
+		return fmt.Errorf("object is not String. got=%T (%+v)", actual, actual)
+	}
+
+	if result.Value != expected {
+		return fmt.Errorf("object has wrong value. expected=%q, got=%q", expected, result.Value)
+	}
+
+	return nil
 }
 
 func testBooleanObject(expected bool, actual object.Object) error {
