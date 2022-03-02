@@ -7,6 +7,7 @@ import (
 	"github.com/florianwoelki/reflow/ast"
 	"github.com/florianwoelki/reflow/code"
 	"github.com/florianwoelki/reflow/object"
+	"github.com/florianwoelki/reflow/object/builtin"
 )
 
 type EmittedInstruction struct {
@@ -36,9 +37,15 @@ func New() *Compiler {
 		previousInstruction: EmittedInstruction{},
 	}
 
+	symbolTable := NewSymbolTable()
+
+	for i, v := range builtin.Builtins {
+		symbolTable.DefineBuiltin(i, v.Name)
+	}
+
 	return &Compiler{
 		constants:   []object.Object{},
-		symbolTable: NewSymbolTable(),
+		symbolTable: symbolTable,
 		scopes:      []CompilationScope{mainScope},
 		scopeIndex:  0,
 	}
@@ -217,11 +224,7 @@ func (c *Compiler) Compile(node ast.Node) error {
 			return fmt.Errorf("undefined variable %s", node.Value)
 		}
 
-		if symbol.Scope == GlobalScope {
-			c.emit(code.OpGetGlobal, symbol.Index)
-		} else {
-			c.emit(code.OpGetLocal, symbol.Index)
-		}
+		c.loadSymbol(symbol)
 	case *ast.StringLiteral:
 		str := &object.String{Value: node.Value}
 		c.emit(code.OpConstant, c.addConstant(str))
@@ -317,6 +320,17 @@ func (c *Compiler) Compile(node ast.Node) error {
 	}
 
 	return nil
+}
+
+func (c Compiler) loadSymbol(s Symbol) {
+	switch s.Scope {
+	case GlobalScope:
+		c.emit(code.OpGetGlobal, s.Index)
+	case LocalScope:
+		c.emit(code.OpGetLocal, s.Index)
+	case BuiltinScope:
+		c.emit(code.OpGetBuiltin, s.Index)
+	}
 }
 
 func (c *Compiler) replaceLastPopWithReturn() {
