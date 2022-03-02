@@ -35,6 +35,16 @@ func TestBuiltinFunctions(t *testing.T) {
 		{`rest([])`, Null},
 		{`push([], 1)`, []int{1}},
 		{`push(1, 1)`, &object.Error{Message: "argument to `push` must be ARRAY. got=INTEGER"}},
+		{`pop([])`, []int{}},
+		{`pop([1, 2, 3])`, []int{1, 2}},
+		{`pop(1)`, &object.Error{Message: "argument to `pop` must be ARRAY. got=INTEGER"}},
+		{`str(1)`, "1"},
+		{`str(true)`, "true"},
+		{`str()`, &object.Error{Message: "wrong number of arguments. got=0, expected=1"}},
+		{`str([])`, &object.Error{Message: "argument to `str` cannot be ARRAY"}},
+		{`delete({})`, &object.Error{Message: "wrong number of arguments. got=1, expected=2"}},
+		{`delete({ "key1": 123 }, "key1")`, Null},
+		{`let a = {"key1": 123}; delete(a, "key1"); a`, &object.Hash{Pairs: map[object.HashKey]object.HashPair{}}},
 	}
 
 	runVmTests(t, tests)
