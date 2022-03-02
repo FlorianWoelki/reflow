@@ -8,6 +8,7 @@ import (
 	"github.com/florianwoelki/reflow/compiler"
 	"github.com/florianwoelki/reflow/lexer"
 	"github.com/florianwoelki/reflow/object"
+	"github.com/florianwoelki/reflow/object/builtin"
 	"github.com/florianwoelki/reflow/parser"
 	"github.com/florianwoelki/reflow/vm"
 )
@@ -20,6 +21,10 @@ func Run(in io.Reader, out io.Writer) {
 	constants := []object.Object{}
 	globals := make([]object.Object, vm.GlobalsSize)
 	symbolTable := compiler.NewSymbolTable()
+
+	for i, v := range builtin.Builtins {
+		symbolTable.DefineBuiltin(i, v.Name)
+	}
 
 	for {
 		fmt.Fprintf(out, PROMPT)
