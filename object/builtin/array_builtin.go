@@ -9,7 +9,7 @@ func builtinFirst(args ...object.Object) object.Object {
 		return newError("wrong number of arguments. got=%d, expected=1", len(args))
 	}
 	if args[0].Type() != object.ARRAY_OBJ {
-		return newError("argument to `first` must be ARRAY, got %s", args[0].Type())
+		return newError("argument to `first` must be ARRAY. got=%s", args[0].Type())
 	}
 
 	arr := args[0].(*object.Array)
@@ -25,7 +25,7 @@ func builtinLast(args ...object.Object) object.Object {
 		return newError("wrong number of arguments. got=%d, expected=1", len(args))
 	}
 	if args[0].Type() != object.ARRAY_OBJ {
-		return newError("argument to `last` must be ARRAY, got %s", args[0].Type())
+		return newError("argument to `last` must be ARRAY. got=%s", args[0].Type())
 	}
 
 	arr := args[0].(*object.Array)
@@ -42,7 +42,7 @@ func builtinRest(args ...object.Object) object.Object {
 		return newError("wrong number of arguments. got=%d, expected=1", len(args))
 	}
 	if args[0].Type() != object.ARRAY_OBJ {
-		return newError("argument to `rest` must be ARRAY, got %s", args[0].Type())
+		return newError("argument to `rest` must be ARRAY. got=%s", args[0].Type())
 	}
 
 	arr := args[0].(*object.Array)
@@ -61,7 +61,7 @@ func builtinPop(args ...object.Object) object.Object {
 		return newError("wrong number of arguments. got=%d, expected=1", len(args))
 	}
 	if args[0].Type() != object.ARRAY_OBJ {
-		return newError("argument to `pop` must be ARRAY, got %s", args[0].Type())
+		return newError("argument to `pop` must be ARRAY. got=%s", args[0].Type())
 	}
 
 	array := args[0].(*object.Array)
@@ -84,7 +84,7 @@ func builtinPush(args ...object.Object) object.Object {
 		return newError("wrong number of arguments. got=%d, expected=2", len(args))
 	}
 	if args[0].Type() != object.ARRAY_OBJ {
-		return newError("argument to `push` must be ARRAY, got %s", args[0].Type())
+		return newError("argument to `push` must be ARRAY. got=%s", args[0].Type())
 	}
 
 	arr := args[0].(*object.Array)
