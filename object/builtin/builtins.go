@@ -86,8 +86,8 @@ var Builtins = []struct {
 	{"rest", &Builtin{Fn: builtinRest}},
 	{"pop", &Builtin{Fn: builtinPop}},
 	{"push", &Builtin{Fn: builtinPush}},
-	{"map", &Builtin{Fn: builtinMap}},
+	/*{"map", &Builtin{Fn: builtinMap}},
 	{"find", &Builtin{Fn: builtinFind}},
-	{"filter", &Builtin{Fn: builtinFilter}},
+	{"filter", &Builtin{Fn: builtinFilter}},*/
 	{"delete", &Builtin{Fn: builtinDelete}},
 }

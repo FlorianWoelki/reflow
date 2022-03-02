@@ -125,8 +125,9 @@ func builtinFind(args ...object.Object) object.Object {
 		return newError("second argument to `find` must be FUNCTION. got=%s", args[0].Type())
 	}
 
-	newElements := make([]object.Object, len(args)-2)
-	copy(newElements, args[2:])
+	array := args[0].(*object.Array)
+	newElements := make([]object.Object, len(array.Elements))
+	copy(newElements, array.Elements)
 
 	foundIndex := -1
 	for i, element := range newElements {
