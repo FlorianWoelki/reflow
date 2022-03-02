@@ -5,6 +5,7 @@ import (
 
 	"github.com/florianwoelki/reflow/ast"
 	"github.com/florianwoelki/reflow/object"
+	"github.com/florianwoelki/reflow/object/builtin"
 )
 
 // Defines constant object values.
@@ -259,24 +260,11 @@ func applyFunction(fn object.Object, args []object.Object) object.Object {
 		extendedEnv := extendFunctionEnv(fn, args)
 		evaluated := Eval(fn.Body, extendedEnv)
 		return unwrapReturnValue(evaluated)
-	case *object.Builtin:
-		if len(args) > 1 {
-			if array, ok := args[0].(*object.Array); ok {
-				if f, ok := args[1].(*object.Function); ok {
-					evaluatedElements := []object.Object{}
-					for _, arrayElement := range array.Elements {
-						extendedEnv := extendFunctionEnv(f, []object.Object{arrayElement})
-						evaluated := Eval(f.Body, extendedEnv)
-						evaluatedElements = append(evaluatedElements, unwrapReturnValue(evaluated))
-					}
-
-					args = append(args, evaluatedElements...)
-					return fn.Fn(args...)
-				}
-			}
+	case *builtin.Builtin:
+		if result := fn.Fn(args...); result != nil {
+			return result
 		}
-
-		return fn.Fn(args...)
+		return NULL
 	default:
 		return newError("not a function: %s", fn.Type())
 	}

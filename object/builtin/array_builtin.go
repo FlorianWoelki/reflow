@@ -1,6 +1,8 @@
-package evaluator
+package builtin
 
-import "github.com/florianwoelki/reflow/object"
+import (
+	"github.com/florianwoelki/reflow/object"
+)
 
 func builtinFirst(args ...object.Object) object.Object {
 	if len(args) != 1 {
@@ -15,7 +17,7 @@ func builtinFirst(args ...object.Object) object.Object {
 		return arr.Elements[0]
 	}
 
-	return NULL
+	return nil
 }
 
 func builtinLast(args ...object.Object) object.Object {
@@ -32,7 +34,7 @@ func builtinLast(args ...object.Object) object.Object {
 		return arr.Elements[length-1]
 	}
 
-	return NULL
+	return nil
 }
 
 func builtinRest(args ...object.Object) object.Object {
@@ -51,7 +53,7 @@ func builtinRest(args ...object.Object) object.Object {
 		return &object.Array{Elements: newElements}
 	}
 
-	return NULL
+	return nil
 }
 
 func builtinPop(args ...object.Object) object.Object {

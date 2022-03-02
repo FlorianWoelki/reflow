@@ -1,76 +1,20 @@
 package evaluator
 
 import (
-	"fmt"
-
-	"github.com/florianwoelki/reflow/object"
+	"github.com/florianwoelki/reflow/object/builtin"
 )
 
-func builtinLen(args ...object.Object) object.Object {
-	if len(args) != 1 {
-		return newError("wrong number of arguments. got=%d, expected=1", len(args))
-	}
-
-	switch arg := args[0].(type) {
-	case *object.Array:
-		return &object.Integer{Value: int64(len(arg.Elements))}
-	case *object.String:
-		return &object.Integer{Value: int64(len(arg.Value))}
-	default:
-		return newError("argument to `len` not supported. got=%s", args[0].Type())
-	}
-}
-
-func builtinPrint(args ...object.Object) object.Object {
-	for _, arg := range args {
-		fmt.Println(arg.Inspect())
-	}
-
-	return NULL
-}
-
-func builtinStr(args ...object.Object) object.Object {
-	if len(args) != 1 {
-		return newError("wrong number of arguments. got=%d, expected=1", len(args))
-	}
-	if args[0].Type() == object.ARRAY_OBJ {
-		return newError("argument to `str` cannot be ARRAY")
-	}
-
-	return &object.String{Value: args[0].Inspect()}
-}
-
-func builtinDelete(args ...object.Object) object.Object {
-	if len(args) != 2 {
-		return newError("wrong number of arguments. got=%d, expected=2", len(args))
-	}
-	if args[0].Type() != object.HASH_OBJ {
-		return newError("first argument to `delete` should be a hash")
-	}
-
-	hash := args[0].(*object.Hash)
-	k := args[1].(object.Hashable)
-	_, ok := hash.Pairs[k.HashKey()]
-	if !ok {
-		return newError("hash key `%d` not found", k.HashKey().Value)
-	}
-
-	delete(hash.Pairs, k.HashKey())
-
-	return NULL
-}
-
-var builtins = map[string]*object.Builtin{
-	"len":    {Fn: builtinLen},
-	"print":  {Fn: builtinPrint},
-	"str":    {Fn: builtinStr},
-	"first":  {Fn: builtinFirst},
-	"last":   {Fn: builtinLast},
-	"rest":   {Fn: builtinRest},
-	"pop":    {Fn: builtinPop},
-	"push":   {Fn: builtinPush},
-	"map":    {Fn: builtinMap},
-	"find":   {Fn: builtinFind},
-	"filter": {Fn: builtinFilter},
-	"delete": {Fn: builtinDelete},
+var builtins = map[string]*builtin.Builtin{
+	"len":    builtin.GetBuiltinByName("len"),
+	"print":  builtin.GetBuiltinByName("print"),
+	"str":    builtin.GetBuiltinByName("str"),
+	"first":  builtin.GetBuiltinByName("first"),
+	"last":   builtin.GetBuiltinByName("last"),
+	"rest":   builtin.GetBuiltinByName("rest"),
+	"pop":    builtin.GetBuiltinByName("pop"),
+	"push":   builtin.GetBuiltinByName("push"),
+	"map":    builtin.GetBuiltinByName("map"),
+	"find":   builtin.GetBuiltinByName("find"),
+	"filter": builtin.GetBuiltinByName("filter"),
+	"delete": builtin.GetBuiltinByName("delete"),
 }
