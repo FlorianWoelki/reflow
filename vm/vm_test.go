@@ -16,6 +16,33 @@ type vmTestCase struct {
 	expected interface{}
 }
 
+func TestClosures(t *testing.T) {
+	tests := []vmTestCase{
+		{
+			input: `
+			let newClosure = fn(a) {
+				fn() { a; }
+			};
+			let closure = newClosure(99);
+			closure();
+			`,
+			expected: 99,
+		},
+		{
+			input: `
+			let newAdder = fn(a, b) {
+				fn(c) { a + b + c };
+			};
+			let adder = newAdder(1, 2);
+			adder(8);
+			`,
+			expected: 11,
+		},
+	}
+
+	runVmTests(t, tests)
+}
+
 func TestBuiltinFunctions(t *testing.T) {
 	tests := []vmTestCase{
 		{`len("")`, 0},
