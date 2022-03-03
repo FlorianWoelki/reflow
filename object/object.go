@@ -16,6 +16,7 @@ const (
 	HASH_OBJ         = "HASH"
 
 	COMPILED_FUNCTION_OBJ = "COMPILED_FUNCTION_OBJ"
+	CLOSURE_OBJ           = "CLOSURE"
 )
 
 // Object is an interface and represents every value the interpreter encounters.
