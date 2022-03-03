@@ -33,6 +33,7 @@ func TestRecrusiveFunctions(t *testing.T) {
 					code.Make(code.OpSub),
 					code.Make(code.OpCall, 1),
 					code.Make(code.OpReturnValue),
+					code.Make(code.OpReturn),
 				},
 				1,
 			},
