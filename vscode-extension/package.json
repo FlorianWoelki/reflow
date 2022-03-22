@@ -1,0 +1,25 @@
+{
+    "name": "reflow-lang",
+    "displayName": "reflow lang",
+    "description": "Syntax highlighting for reflow lang",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.65.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "reflow",
+            "aliases": ["reflow", "reflow"],
+            "extensions": [".rf"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "reflow",
+            "scopeName": "source.rf",
+            "path": "./syntaxes/reflow.tmLanguage.json"
+        }]
+    }
+}
