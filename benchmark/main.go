@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"time"
 
 	"github.com/florianwoelki/reflow/compiler"
@@ -14,28 +15,28 @@ import (
 )
 
 var engine = flag.String("engine", "vm", "use 'vm' or 'eval'")
+var filename = flag.String("filename", "benchmark/fibo.rf", "specify filename with '.rf' extension")
 
-var input = `
-let fibo = fn(x) {
-	if (x == 0) {
-		0
-	} else {
-		if (x == 1) {
-			1
-		} else {
-			fibo(x - 1) + fibo(x - 2)
-		}
+func readFile(filename string) (string, error) {
+	content, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return "", err
 	}
-}
 
-fibo(35);
-`
+	return string(content), nil
+}
 
 func main() {
 	flag.Parse()
 
 	var duration time.Duration
 	var result object.Object
+
+	input, err := readFile(*filename)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	l := lexer.New(input)
 	p := parser.New(l)
