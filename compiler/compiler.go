@@ -291,6 +291,7 @@ func (c *Compiler) Compile(node ast.Node) error {
 		if c.lastInstructionIs(code.OpPop) {
 			c.replaceLastPopWithReturn()
 		}
+
 		if !c.lastInstructionIs(code.OpReturnValue) {
 			c.emit(code.OpReturn)
 		}
@@ -350,6 +351,8 @@ func (c Compiler) loadSymbol(s Symbol) {
 func (c *Compiler) replaceLastPopWithReturn() {
 	lastPos := c.scopes[c.scopeIndex].lastInstruction.Position
 	c.replaceInstruction(lastPos, code.Make(code.OpReturnValue))
+	c.scopes[c.scopeIndex].lastInstruction.Position = lastPos
+	c.scopes[c.scopeIndex].lastInstruction.Opcode = code.OpReturnValue
 }
 
 func (c *Compiler) emit(op code.Opcode, operands ...int) int {
